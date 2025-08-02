@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import BodyPartGrid from './components/BodyPartGrid';
 import ExerciseList from './components/ExerciseList';
 import ExerciseDetail from './components/ExerciseDetail';
+import CustomTipsManager from './components/CustomTipsManager';
 import { exerciseData } from './data/exerciseData';
 
 function App() {
@@ -30,14 +31,29 @@ function App() {
     setSelectedExercise(null);
   };
 
+  const handleGoToCustomTips = () => {
+    setCurrentPage('customTips');
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
         return (
-          <BodyPartGrid 
-            bodyParts={exerciseData.bodyParts}
-            onBodyPartSelect={handleBodyPartSelect}
-          />
+          <div>
+            <div className="mb-6">
+              <button
+                onClick={handleGoToCustomTips}
+                className="w-full mb-4 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center"
+              >
+                <span className="mr-2">📝</span>
+                查看我的注意事項
+              </button>
+            </div>
+            <BodyPartGrid 
+              bodyParts={exerciseData.bodyParts}
+              onBodyPartSelect={handleBodyPartSelect}
+            />
+          </div>
         );
       case 'exerciseList':
         return (
@@ -53,6 +69,13 @@ function App() {
           <ExerciseDetail
             exercise={selectedExercise}
             onBack={handleBackToList}
+          />
+        );
+      case 'customTips':
+        return (
+          <CustomTipsManager
+            exerciseData={exerciseData}
+            onBack={handleBackToHome}
           />
         );
       default:
