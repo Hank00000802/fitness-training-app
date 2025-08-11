@@ -55,7 +55,10 @@ function App() {
         isProcessingPopState = false;
       }, 300); // 300ms 的防抖延遲
     };
-
+    
+    // 將處理器暴露到全局，以便外部重置
+    window.popStateHandler = { isProcessingPopState };
+    
     // 監聽瀏覽器的 popstate 事件（包括手機返回鍵）
     window.addEventListener('popstate', handlePopState);
 
@@ -108,8 +111,38 @@ function App() {
     setCurrentPage('home');
     setSelectedBodyPart(null);
     setSelectedExercise(null);
-    // 返回首頁時，回到瀏覽器歷史記錄的根目錄
-    window.history.pushState({ page: 'home' }, '健身訓練 APP', '/');
+    
+    // 完全重置系統狀態和歷史記錄
+    resetSystemState();
+  };
+
+  // 完全重置系統狀態和歷史記錄
+  const resetSystemState = () => {
+    // 重置所有狀態
+    setCurrentPage('home');
+    setSelectedBodyPart(null);
+    setSelectedExercise(null);
+    
+    // 重置防抖標記
+    if (window.popStateHandler) {
+      window.popStateHandler.isProcessingPopState = false;
+    }
+    
+    // 重置 popstate 事件標記
+    window.isPopStateEvent = false;
+    
+    // 完全清理瀏覽器歷史記錄，回到乾淨的首頁狀態
+    // 使用 replaceState 替換所有歷史記錄，確保只有首頁
+    window.history.replaceState(
+      { page: 'home' },
+      '健身訓練 APP',
+      '/'
+    );
+    
+    // 更新頁面標題
+    document.title = '健身訓練 APP';
+    
+    console.log('系統狀態已完全重置');
   };
 
   const handleBackToList = () => {
