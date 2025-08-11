@@ -12,15 +12,30 @@ function App() {
   // 處理手機返回鍵
   useEffect(() => {
     const handlePopState = () => {
+      // 設置標記，表示這是 popstate 事件
+      window.isPopStateEvent = true;
+      
       // 根據當前頁面狀態決定返回行為
       if (currentPage === 'exerciseDetail') {
         // 如果在動作詳情頁，返回動作列表
         setCurrentPage('exerciseList');
         setSelectedExercise(null);
+        // 立即清理歷史記錄，防止重複觸發
+        window.history.replaceState(
+          { page: 'exerciseList', bodyPart: selectedBodyPart, exercise: null },
+          `${selectedBodyPart?.name} 動作列表`,
+          '#exerciseList'
+        );
       } else if (currentPage === 'exerciseList') {
         // 如果在動作列表頁，返回首頁
         setCurrentPage('home');
         setSelectedBodyPart(null);
+        // 清理歷史記錄，回到首頁
+        window.history.replaceState(
+          { page: 'home' },
+          '健身訓練 APP',
+          '/'
+        );
       }
       // 如果在首頁，不做任何處理（讓瀏覽器處理）
     };
@@ -32,7 +47,7 @@ function App() {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [currentPage]);
+  }, [currentPage, selectedBodyPart]);
 
   // 更新瀏覽器歷史記錄
   useEffect(() => {
@@ -51,11 +66,16 @@ function App() {
     document.title = `${pageTitle} - 健身訓練 APP`;
     
     // 使用 pushState 添加新的歷史記錄，保持完整的導航歷史
-    window.history.pushState(
-      { page: currentPage, bodyPart: selectedBodyPart, exercise: selectedExercise },
-      pageTitle,
-      `#${currentPage}`
-    );
+    // 但只在用戶主動導航時添加，不在 popstate 事件後添加
+    if (!window.isPopStateEvent) {
+      window.history.pushState(
+        { page: currentPage, bodyPart: selectedBodyPart, exercise: selectedExercise },
+        pageTitle,
+        `#${currentPage}`
+      );
+    }
+    // 重置標記
+    window.isPopStateEvent = false;
   }, [currentPage, selectedBodyPart, selectedExercise]);
 
   const handleBodyPartSelect = (bodyPart) => {
