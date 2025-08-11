@@ -39,8 +39,8 @@ function App() {
         );
       } else if (currentPage === 'exerciseList') {
         // 如果在動作列表頁，返回首頁
-        // 使用 resetSystemState 確保完全重置，與左上角返回鍵行為一致
-        resetSystemState();
+        // 直接調用 handleBackToHome，與左上角返回鍵完全一致
+        handleBackToHome();
       }
       // 如果在首頁，不做任何處理（讓瀏覽器處理）
       
@@ -102,22 +102,6 @@ function App() {
   };
 
   const handleBackToHome = () => {
-    setCurrentPage('home');
-    setSelectedBodyPart(null);
-    setSelectedExercise(null);
-    
-    // 完全重置系統狀態和歷史記錄
-    resetSystemState();
-  };
-
-  // 完全重置系統狀態和歷史記錄
-  const resetSystemState = () => {
-    // 防止在 popstate 事件處理中重複調用
-    if (window.isPopStateEvent) {
-      console.log('在 popstate 事件中調用 resetSystemState，跳過重複重置');
-      return;
-    }
-    
     // 重置所有狀態
     setCurrentPage('home');
     setSelectedBodyPart(null);
@@ -132,7 +116,6 @@ function App() {
     window.isPopStateEvent = false;
     
     // 完全清理瀏覽器歷史記錄，回到乾淨的首頁狀態
-    // 使用 replaceState 替換所有歷史記錄，確保只有首頁
     window.history.replaceState(
       { page: 'home' },
       '健身訓練 APP',
