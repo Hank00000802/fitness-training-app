@@ -11,7 +11,18 @@ function App() {
 
   // 處理手機返回鍵
   useEffect(() => {
+    // 防抖標記，防止快速連續按返回鍵
+    let isProcessingPopState = false;
+    
     const handlePopState = () => {
+      // 如果正在處理前一個 popstate 事件，則忽略
+      if (isProcessingPopState) {
+        return;
+      }
+      
+      // 設置處理標記
+      isProcessingPopState = true;
+      
       // 設置標記，表示這是 popstate 事件
       window.isPopStateEvent = true;
       
@@ -38,6 +49,11 @@ function App() {
         );
       }
       // 如果在首頁，不做任何處理（讓瀏覽器處理）
+      
+      // 延遲重置處理標記，防止快速連續觸發
+      setTimeout(() => {
+        isProcessingPopState = false;
+      }, 300); // 300ms 的防抖延遲
     };
 
     // 監聽瀏覽器的 popstate 事件（包括手機返回鍵）
