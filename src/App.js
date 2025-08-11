@@ -17,7 +17,8 @@ function App() {
         // 如果在動作詳情頁，返回動作列表
         setCurrentPage('exerciseList');
         setSelectedExercise(null);
-      } else if (currentPage === 'exerciseList') {
+      } 
+      if (currentPage === 'exerciseList') {
         // 如果在動作列表頁，返回首頁
         setCurrentPage('home');
         setSelectedBodyPart(null);
