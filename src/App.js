@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BodyPartGrid from './components/BodyPartGrid';
 import ExerciseList from './components/ExerciseList';
 import ExerciseDetail from './components/ExerciseDetail';
@@ -9,6 +9,55 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedBodyPart, setSelectedBodyPart] = useState(null);
   const [selectedExercise, setSelectedExercise] = useState(null);
+
+  // ³B²z¤â¾÷ªð¦^Áä
+  useEffect(() => {
+    const handlePopState = () => {
+      // ®Ú¾Ú·í«e­¶­±ª¬ºA¨M©wªð¦^¦æ¬°
+      if (currentPage === 'exerciseDetail') {
+        // ¦pªG¦b°Ê§@¸Ô±¡­¶¡Aªð¦^°Ê§@¦Cªí
+        setCurrentPage('exerciseList');
+        setSelectedExercise(null);
+      } else if (currentPage === 'exerciseList') {
+        // ¦pªG¦b°Ê§@¦Cªí­¶¡Aªð¦^­º­¶
+        setCurrentPage('home');
+        setSelectedBodyPart(null);
+      }
+      // ¦pªG¦b­º­¶¡A¤£°µ¥ô¦ó³B²z¡]ÅýÂsÄý¾¹³B²z¡^
+    };
+
+    // ºÊÅ¥ÂsÄý¾¹ªº popstate ¨Æ¥ó¡]¥]¬A¤â¾÷ªð¦^Áä¡^
+    window.addEventListener('popstate', handlePopState);
+
+    // ²M²z¨Æ¥óºÊÅ¥¾¹
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [currentPage]);
+
+  // §ó·sÂsÄý¾¹¾ú¥v°O¿ý
+  useEffect(() => {
+    // ®Ú¾Ú­¶­±ª¬ºA§ó·sÂsÄý¾¹¾ú¥v°O¿ý
+    if (currentPage === 'home') {
+      // ­º­¶¤£»Ý­nÃB¥~³B²z
+      return;
+    }
+
+    // ¬°¨ä¥L­¶­±²K¥[¾ú¥v°O¿ý
+    const pageTitle = currentPage === 'exerciseList' 
+      ? `${selectedBodyPart?.name} °Ê§@¦Cªí` 
+      : `${selectedExercise?.name} ª`·N¨Æ¶µ`;
+    
+    // §ó·s­¶­±¼ÐÃD
+    document.title = `${pageTitle} - °·¨­°V½m APP`;
+    
+    // ²K¥[¾ú¥v°O¿ý
+    window.history.pushState(
+      { page: currentPage, bodyPart: selectedBodyPart, exercise: selectedExercise },
+      pageTitle,
+      `#${currentPage}`
+    );
+  }, [currentPage, selectedBodyPart, selectedExercise]);
 
   const handleBodyPartSelect = (bodyPart) => {
     setSelectedBodyPart(bodyPart);
@@ -24,11 +73,19 @@ function App() {
     setCurrentPage('home');
     setSelectedBodyPart(null);
     setSelectedExercise(null);
+    // ªð¦^­º­¶®É¡A¦^¨ìÂsÄý¾¹¾ú¥v°O¿ýªº®Ú¥Ø¿ý
+    window.history.pushState({ page: 'home' }, '°·¨­°V½m APP', '/');
   };
 
   const handleBackToList = () => {
     setCurrentPage('exerciseList');
     setSelectedExercise(null);
+    // ªð¦^°Ê§@¦Cªí®É¡A§ó·s¾ú¥v°O¿ý
+    window.history.pushState(
+      { page: 'exerciseList', bodyPart: selectedBodyPart },
+      `${selectedBodyPart?.name} °Ê§@¦Cªí - °·¨­°V½m APP`,
+      `#exerciseList`
+    );
   };
 
   const handleGoToCustomTips = () => {
@@ -45,8 +102,8 @@ function App() {
                 onClick={handleGoToCustomTips}
                 className="w-full mb-4 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center"
               >
-                <span className="mr-2">ðŸ“</span>
-                æŸ¥çœ‹æˆ‘çš„æ³¨æ„äº‹é …
+                <span className="mr-2">????</span>
+                ??¥ç????????æ³¨æ??äº????
               </button>
             </div>
             <BodyPartGrid 
