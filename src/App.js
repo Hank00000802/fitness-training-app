@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import BodyPartGrid from './components/BodyPartGrid';
 import ExerciseList from './components/ExerciseList';
 import ExerciseDetail from './components/ExerciseDetail';
-import CustomTipsManager from './components/CustomTipsManager';
 import { exerciseData } from './data/exerciseData';
 
 function App() {
@@ -10,48 +9,48 @@ function App() {
   const [selectedBodyPart, setSelectedBodyPart] = useState(null);
   const [selectedExercise, setSelectedExercise] = useState(null);
 
-  // ³B²z¤â¾÷ªð¦^Áä
+  // è™•ç†æ‰‹æ©Ÿè¿”å›žéµ
   useEffect(() => {
     const handlePopState = () => {
-      // ®Ú¾Ú·í«e­¶­±ª¬ºA¨M©wªð¦^¦æ¬°
+      // æ ¹æ“šç•¶å‰é é¢ç‹€æ…‹æ±ºå®šè¿”å›žè¡Œç‚º
       if (currentPage === 'exerciseDetail') {
-        // ¦pªG¦b°Ê§@¸Ô±¡­¶¡Aªð¦^°Ê§@¦Cªí
+        // å¦‚æžœåœ¨å‹•ä½œè©³æƒ…é ï¼Œè¿”å›žå‹•ä½œåˆ—è¡¨
         setCurrentPage('exerciseList');
         setSelectedExercise(null);
       } else if (currentPage === 'exerciseList') {
-        // ¦pªG¦b°Ê§@¦Cªí­¶¡Aªð¦^­º­¶
+        // å¦‚æžœåœ¨å‹•ä½œåˆ—è¡¨é ï¼Œè¿”å›žé¦–é 
         setCurrentPage('home');
         setSelectedBodyPart(null);
       }
-      // ¦pªG¦b­º­¶¡A¤£°µ¥ô¦ó³B²z¡]ÅýÂsÄý¾¹³B²z¡^
+      // å¦‚æžœåœ¨é¦–é ï¼Œä¸åšä»»ä½•è™•ç†ï¼ˆè®“ç€è¦½å™¨è™•ç†ï¼‰
     };
 
-    // ºÊÅ¥ÂsÄý¾¹ªº popstate ¨Æ¥ó¡]¥]¬A¤â¾÷ªð¦^Áä¡^
+    // ç›£è½ç€è¦½å™¨çš„ popstate äº‹ä»¶ï¼ˆåŒ…æ‹¬æ‰‹æ©Ÿè¿”å›žéµï¼‰
     window.addEventListener('popstate', handlePopState);
 
-    // ²M²z¨Æ¥óºÊÅ¥¾¹
+    // æ¸…ç†äº‹ä»¶ç›£è½å™¨
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
   }, [currentPage]);
 
-  // §ó·sÂsÄý¾¹¾ú¥v°O¿ý
+  // æ›´æ–°ç€è¦½å™¨æ­·å²è¨˜éŒ„
   useEffect(() => {
-    // ®Ú¾Ú­¶­±ª¬ºA§ó·sÂsÄý¾¹¾ú¥v°O¿ý
+    // æ ¹æ“šé é¢ç‹€æ…‹æ›´æ–°ç€è¦½å™¨æ­·å²è¨˜éŒ„
     if (currentPage === 'home') {
-      // ­º­¶¤£»Ý­nÃB¥~³B²z
+      // é¦–é ä¸éœ€è¦é¡å¤–è™•ç†
       return;
     }
 
-    // ¬°¨ä¥L­¶­±²K¥[¾ú¥v°O¿ý
+    // ç‚ºå…¶ä»–é é¢æ·»åŠ æ­·å²è¨˜éŒ„
     const pageTitle = currentPage === 'exerciseList' 
-      ? `${selectedBodyPart?.name} °Ê§@¦Cªí` 
-      : `${selectedExercise?.name} ª`·N¨Æ¶µ`;
+      ? `${selectedBodyPart?.name} å‹•ä½œåˆ—è¡¨` 
+      : `${selectedExercise?.name} æ³¨æ„äº‹é …`;
     
-    // §ó·s­¶­±¼ÐÃD
-    document.title = `${pageTitle} - °·¨­°V½m APP`;
+    // æ›´æ–°é é¢æ¨™é¡Œ
+    document.title = `${pageTitle} - å¥èº«è¨“ç·´ APP`;
     
-    // ²K¥[¾ú¥v°O¿ý
+    // æ·»åŠ æ­·å²è¨˜éŒ„
     window.history.pushState(
       { page: currentPage, bodyPart: selectedBodyPart, exercise: selectedExercise },
       pageTitle,
@@ -73,44 +72,29 @@ function App() {
     setCurrentPage('home');
     setSelectedBodyPart(null);
     setSelectedExercise(null);
-    // ªð¦^­º­¶®É¡A¦^¨ìÂsÄý¾¹¾ú¥v°O¿ýªº®Ú¥Ø¿ý
-    window.history.pushState({ page: 'home' }, '°·¨­°V½m APP', '/');
+    // è¿”å›žé¦–é æ™‚ï¼Œå›žåˆ°ç€è¦½å™¨æ­·å²è¨˜éŒ„çš„æ ¹ç›®éŒ„
+    window.history.pushState({ page: 'home' }, 'å¥èº«è¨“ç·´ APP', '/');
   };
 
   const handleBackToList = () => {
     setCurrentPage('exerciseList');
     setSelectedExercise(null);
-    // ªð¦^°Ê§@¦Cªí®É¡A§ó·s¾ú¥v°O¿ý
+    // è¿”å›žå‹•ä½œåˆ—è¡¨æ™‚ï¼Œæ›´æ–°æ­·å²è¨˜éŒ„
     window.history.pushState(
       { page: 'exerciseList', bodyPart: selectedBodyPart },
-      `${selectedBodyPart?.name} °Ê§@¦Cªí - °·¨­°V½m APP`,
+      `${selectedBodyPart?.name} å‹•ä½œåˆ—è¡¨ - å¥èº«è¨“ç·´ APP`,
       `#exerciseList`
     );
-  };
-
-  const handleGoToCustomTips = () => {
-    setCurrentPage('customTips');
   };
 
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
         return (
-          <div>
-            <div className="mb-6">
-              <button
-                onClick={handleGoToCustomTips}
-                className="w-full mb-4 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center"
-              >
-                <span className="mr-2">????</span>
-                ??¥ç????????æ³¨æ??äº????
-              </button>
-            </div>
-            <BodyPartGrid 
-              bodyParts={exerciseData.bodyParts}
-              onBodyPartSelect={handleBodyPartSelect}
-            />
-          </div>
+          <BodyPartGrid 
+            bodyParts={exerciseData.bodyParts}
+            onBodyPartSelect={handleBodyPartSelect}
+          />
         );
       case 'exerciseList':
         return (
@@ -126,13 +110,6 @@ function App() {
           <ExerciseDetail
             exercise={selectedExercise}
             onBack={handleBackToList}
-          />
-        );
-      case 'customTips':
-        return (
-          <CustomTipsManager
-            exerciseData={exerciseData}
-            onBack={handleBackToHome}
           />
         );
       default:
