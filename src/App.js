@@ -17,8 +17,7 @@ function App() {
         // 如果在動作詳情頁，返回動作列表
         setCurrentPage('exerciseList');
         setSelectedExercise(null);
-      } 
-      if (currentPage === 'exerciseList') {
+      } else if (currentPage === 'exerciseList') {
         // 如果在動作列表頁，返回首頁
         setCurrentPage('home');
         setSelectedBodyPart(null);
@@ -51,7 +50,7 @@ function App() {
     // 更新頁面標題
     document.title = `${pageTitle} - 健身訓練 APP`;
     
-    // 添加歷史記錄
+    // 使用 pushState 添加新的歷史記錄，保持完整的導航歷史
     window.history.pushState(
       { page: currentPage, bodyPart: selectedBodyPart, exercise: selectedExercise },
       pageTitle,
@@ -80,12 +79,7 @@ function App() {
   const handleBackToList = () => {
     setCurrentPage('exerciseList');
     setSelectedExercise(null);
-    // 返回動作列表時，更新歷史記錄
-    window.history.pushState(
-      { page: 'exerciseList', bodyPart: selectedBodyPart },
-      `${selectedBodyPart?.name} 動作列表 - 健身訓練 APP`,
-      `#exerciseList`
-    );
+    // 不需要在這裡添加新的歷史記錄，讓 useEffect 自動處理
   };
 
   const renderPage = () => {
