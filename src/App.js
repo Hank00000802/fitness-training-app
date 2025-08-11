@@ -79,7 +79,13 @@ function App() {
   const handleBackToList = () => {
     setCurrentPage('exerciseList');
     setSelectedExercise(null);
-    // 不需要在這裡添加新的歷史記錄，讓 useEffect 自動處理
+    // 從詳情頁返回列表頁時，需要替換當前的歷史記錄
+    // 這樣當用戶再次按返回時，會回到首頁而不是詳情頁
+    window.history.replaceState(
+      { page: 'exerciseList', bodyPart: selectedBodyPart, exercise: null },
+      `${selectedBodyPart?.name} 動作列表`,
+      '#exerciseList'
+    );
   };
 
   const renderPage = () => {
