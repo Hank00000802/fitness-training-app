@@ -87,7 +87,7 @@ const ExerciseDetail = ({ exercise, onBack }) => {
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
           <span className="mr-1">←</span>
-          返回
+          返回首頁
         </button>
         <h1 className="text-xl font-bold text-white">
           {exercise.name} 注意事項

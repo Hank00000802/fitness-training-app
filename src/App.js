@@ -29,14 +29,8 @@ function App() {
       // 根據當前頁面狀態決定返回行為
       if (currentPage === 'exerciseDetail') {
         // 如果在動作詳情頁，返回動作列表
-        setCurrentPage('exerciseList');
-        setSelectedExercise(null);
-        // 立即清理歷史記錄，防止重複觸發
-        window.history.replaceState(
-          { page: 'exerciseList', bodyPart: selectedBodyPart, exercise: null },
-          `${selectedBodyPart?.name} 動作列表`,
-          '#exerciseList'
-        );
+        // 直接調用 handleBackToList
+        handleBackToList();
       } else if (currentPage === 'exerciseList') {
         // 如果在動作列表頁，返回首頁
         // 直接調用 handleBackToHome，與左上角返回鍵完全一致
@@ -162,7 +156,7 @@ function App() {
         return (
           <ExerciseDetail
             exercise={selectedExercise}
-            onBack={handleBackToList}
+            onBack={handleBackToHome}
           />
         );
       default:
