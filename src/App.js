@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import BodyPartGrid from './components/BodyPartGrid';
 import ExerciseList from './components/ExerciseList';
 import ExerciseDetail from './components/ExerciseDetail';
@@ -54,7 +54,7 @@ function App() {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [currentPage, selectedBodyPart]);
+  }, [currentPage, selectedBodyPart, handleBackToList, handleBackToHome]);
 
   // 更新瀏覽器歷史記錄
   useEffect(() => {
@@ -95,7 +95,7 @@ function App() {
     setCurrentPage('exerciseDetail');
   };
 
-  const handleBackToHome = () => {
+  const handleBackToHome = useCallback(() => {
     // 重置所有狀態
     setCurrentPage('home');
     setSelectedBodyPart(null);
@@ -120,9 +120,9 @@ function App() {
     document.title = '健身訓練 APP';
     
     console.log('系統狀態已完全重置');
-  };
+  }, []);
 
-  const handleBackToList = () => {
+  const handleBackToList = useCallback(() => {
     setCurrentPage('exerciseList');
     setSelectedExercise(null);
     // 從詳情頁返回列表頁時，需要替換當前的歷史記錄
@@ -132,7 +132,7 @@ function App() {
       `${selectedBodyPart?.name} 動作列表`,
       '#exerciseList'
     );
-  };
+  }, [selectedBodyPart]);
 
   const renderPage = () => {
     switch (currentPage) {
