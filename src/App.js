@@ -9,6 +9,45 @@ function App() {
   const [selectedBodyPart, setSelectedBodyPart] = useState(null);
   const [selectedExercise, setSelectedExercise] = useState(null);
 
+  const handleBackToHome = useCallback(() => {
+    // 重置所有狀態
+    setCurrentPage('home');
+    setSelectedBodyPart(null);
+    setSelectedExercise(null);
+    
+    // 重置防抖標記
+    if (window.popStateHandler) {
+      window.popStateHandler.isProcessingPopState = false;
+    }
+    
+    // 重置 popstate 事件標記
+    window.isPopStateEvent = false;
+    
+    // 完全清理瀏覽器歷史記錄，回到乾淨的首頁狀態
+    window.history.replaceState(
+      { page: 'home' },
+      '健身訓練 APP',
+      '/'
+    );
+    
+    // 更新頁面標題
+    document.title = '健身訓練 APP';
+    
+    console.log('系統狀態已完全重置');
+  }, []);
+
+  const handleBackToList = useCallback(() => {
+    setCurrentPage('exerciseList');
+    setSelectedExercise(null);
+    // 從詳情頁返回列表頁時，需要替換當前的歷史記錄
+    // 這樣當用戶再次按返回時，會回到首頁而不是詳情頁
+    window.history.replaceState(
+      { page: 'exerciseList', bodyPart: selectedBodyPart, exercise: null },
+      `${selectedBodyPart?.name} 動作列表`,
+      '#exerciseList'
+    );
+  }, [selectedBodyPart]);
+
   // 處理手機返回鍵
   useEffect(() => {
     // 防抖標記，防止快速連續按返回鍵
@@ -94,45 +133,6 @@ function App() {
     setSelectedExercise(exercise);
     setCurrentPage('exerciseDetail');
   };
-
-  const handleBackToHome = useCallback(() => {
-    // 重置所有狀態
-    setCurrentPage('home');
-    setSelectedBodyPart(null);
-    setSelectedExercise(null);
-    
-    // 重置防抖標記
-    if (window.popStateHandler) {
-      window.popStateHandler.isProcessingPopState = false;
-    }
-    
-    // 重置 popstate 事件標記
-    window.isPopStateEvent = false;
-    
-    // 完全清理瀏覽器歷史記錄，回到乾淨的首頁狀態
-    window.history.replaceState(
-      { page: 'home' },
-      '健身訓練 APP',
-      '/'
-    );
-    
-    // 更新頁面標題
-    document.title = '健身訓練 APP';
-    
-    console.log('系統狀態已完全重置');
-  }, []);
-
-  const handleBackToList = useCallback(() => {
-    setCurrentPage('exerciseList');
-    setSelectedExercise(null);
-    // 從詳情頁返回列表頁時，需要替換當前的歷史記錄
-    // 這樣當用戶再次按返回時，會回到首頁而不是詳情頁
-    window.history.replaceState(
-      { page: 'exerciseList', bodyPart: selectedBodyPart, exercise: null },
-      `${selectedBodyPart?.name} 動作列表`,
-      '#exerciseList'
-    );
-  }, [selectedBodyPart]);
 
   const renderPage = () => {
     switch (currentPage) {
