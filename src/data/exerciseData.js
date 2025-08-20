@@ -208,6 +208,30 @@ export const exerciseData = {
           '集中前束出力',
           '控制動作速度'
         ]
+      },
+      {
+        id: 'dumbbell_lateral_raise',
+        name: '啞鈴側平舉',
+        description: '以啞鈴訓練中束三角肌的側向抬舉',
+        image: '/images/exercises/dumbbell_lateral_raise.png',
+        tips: [
+          '避免將啞鈴抬過肩膀高度，減少肩關節壓力',
+          '身體直立、核心收緊，避免聳肩與搖晃借力',
+          '手肘微彎，略往側前抬至肩高即可',
+          '初學者建議使用輕重量，專注感受中束出力'
+        ]
+      },
+      {
+        id: 'dumbbell_front_raise',
+        name: '啞鈴前平舉',
+        description: '以啞鈴訓練前三角肌的前向抬舉',
+        image: '/images/exercises/dumbbell_front_raise.png',
+        tips: [
+          '上舉不高於肩膀高度',
+          '核心收緊，避免以身體擺動借力',
+          '可採單手交替方式以降低疲勞並提高控制度',
+          '下放全程控制，勿快速落下'
+        ]
       }
     ],
     back: [
@@ -245,6 +269,30 @@ export const exerciseData = {
           '繩索往下拉至鎖骨高度',
           '控制肩胛骨收縮',
           '專注背部發力'
+        ]
+      },
+      {
+        id: 'single_arm_dumbbell_row',
+        name: '單手啞鈴划船',
+        description: '以單手支撐進行啞鈴划船，著重闊背肌與菱形肌收縮',
+        image: '/images/exercises/single_arm_dumbbell_row.png',
+        tips: [
+          '軀幹保持中立與穩定，避免身體旋轉借力',
+          '肘沿身側路徑往後上拉至下肋位置，頂端主動夾背',
+          '下放至手臂近乎完全伸展並控制肩胛，不聳肩',
+          '以穩定節奏進行，重點放在背部發力而非手臂'
+        ]
+      },
+      {
+        id: 'dumbbell_bent_over_row',
+        name: '雙手啞鈴划船',
+        description: '前傾姿勢同時以雙手持啞鈴進行划船，加強整體背部厚度',
+        image: '/images/exercises/dumbbell_bent_over_row.png',
+        tips: [
+          '髖關節折髖前傾，背部打直維持中立脊椎，核心收緊',
+          '啞鈴沿大腿兩側向上拉至下肋位置，肘朝後下拉不外張',
+          '頂端夾背，下降全程控制，避免甩動與聳肩',
+          '重量以可控為主，動作範圍完整'
         ]
       }
     ],
