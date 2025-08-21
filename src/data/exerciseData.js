@@ -332,6 +332,44 @@ export const exerciseData = {
           '扭轉出力來自腰部與腹斜肌',
           '控制轉體速度'
         ]
+      },
+      {
+        id: 'dumbbell_russian_twist',
+        name: '啞鈴俄羅斯轉體',
+        description: '手持啞鈴進行軀幹旋轉，強化腹斜肌與核心抗旋轉能力',
+        image: '/images/exercises/dumbbell_russian_twist.png',
+        tips: [
+          '挺胸收腹、背部打直，避免含胸駝背',
+          '腳跟是否離地依能力調整，初學者可雙腳放地，進階可抬腳提高負荷',
+          '動作控制、避免過快，切勿靠慣性甩動',
+          '帶動旋轉的是軀幹而非單純手臂移動，確保核心參與'
+        ]
+      },
+      {
+        id: 'single_arm_dumbbell_farmers_walk',
+        name: '啞鈴單邊農夫走',
+        description: '單手持啞鈴行走，訓練握力、肩部穩定與核心抗側屈',
+        image: '/images/exercises/single_arm_dumbbell_farmers_walk.png',
+        tips: [
+          '站姿挺直、肩膀對齊，避免單邊聳肩或下垂',
+          '核心收緊避免身體歪斜，抵抗啞鈴造成的不平衡',
+          '步伐穩定、避免快步或跳動',
+          '另一手自然垂放或輕微外展，避免刻意擺動來平衡',
+          '啞鈴自然下垂，避免貼身摩擦'
+        ]
+      },
+      {
+        id: 'dumbbell_side_bend',
+        name: '啞鈴側屈',
+        description: '單手持啞鈴側向屈曲軀幹，強調腹斜肌發力',
+        image: '/images/exercises/dumbbell_side_bend.png',
+        tips: [
+          '只做側屈不前傾或後仰，維持同一平面活動',
+          '避免聳肩，肩膀放鬆減少不必要壓力',
+          '動作範圍適中，勿為求幅度過大而壓迫腰椎',
+          '來回皆需控制，避免反彈彈回',
+          '可雙手各持啞鈴作為進階，但初學建議單邊持鈴以增加對側穩定'
+        ]
       }
     ],
     legs: [

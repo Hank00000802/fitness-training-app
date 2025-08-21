@@ -1,0 +1,3 @@
+請幫我改寫 popstate 事件的 handler，改成用 event.state 裡的 page, bodyPart, exercise 等資訊還原 React 狀態，不再依賴當前的 React state。
+並且初始載入時讀一次 window.history.state，確保重新整理後頁面狀態正確。
+pushState 和 replaceState 也要存好完整的狀態物件。
