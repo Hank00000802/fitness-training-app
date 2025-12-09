@@ -4,7 +4,7 @@ const CustomTipsManager = ({ exerciseData, onBack }) => {
   const [allCustomTips, setAllCustomTips] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // ���J�Ҧ��ۭq�`�N�ƶ�
+  // 載入所有自訂注意事項
   useEffect(() => {
     const tips = [];
     Object.values(exerciseData.exercises).flat().forEach(exercise => {
@@ -23,7 +23,7 @@ const CustomTipsManager = ({ exerciseData, onBack }) => {
             });
           }
         } catch (e) {
-          // �p�G�ѪR���ѡA�����®榡
+          // 如果解析失敗，嘗試舊格式
           const oldFormat = savedTips.split('\n\n').filter(tip => tip.trim());
           if (oldFormat.length > 0) {
             tips.push({
@@ -41,17 +41,17 @@ const CustomTipsManager = ({ exerciseData, onBack }) => {
     setAllCustomTips(tips);
   }, [exerciseData]);
 
-  // �M���S�w�B�ʪ��`�N�ƶ�
+  // 清除特定運動的注意事項
   const handleClearExerciseTips = (exerciseId) => {
-    if (window.confirm('�T�w�n�M���o�ӹB�ʪ��Ҧ��ۭq�`�N�ƶ��ܡH')) {
+    if (window.confirm('確定要清除這個運動的所有自訂注意事項嗎？')) {
       localStorage.removeItem(`customTips_${exerciseId}`);
       setAllCustomTips(prev => prev.filter(tip => tip.exerciseId !== exerciseId));
     }
   };
 
-  // �M���Ҧ��`�N�ƶ�
+  // 清除所有注意事項
   const handleClearAllTips = () => {
-    if (window.confirm('�T�w�n�M���Ҧ��B�ʪ��ۭq�`�N�ƶ��ܡH���ާ@�L�k�_��C')) {
+    if (window.confirm('確定要清除所有運動的自訂注意事項嗎？此操作無法復原。')) {
       allCustomTips.forEach(tip => {
         localStorage.removeItem(`customTips_${tip.exerciseId}`);
       });
@@ -59,7 +59,7 @@ const CustomTipsManager = ({ exerciseData, onBack }) => {
     }
   };
 
-  // �L�o�`�N�ƶ�
+  // 過濾注意事項
   const filteredTips = allCustomTips.filter(tip =>
     tip.exerciseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     tip.tips.some(t => t.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -77,11 +77,11 @@ const CustomTipsManager = ({ exerciseData, onBack }) => {
           onClick={onBack}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1">��</span>
-          ��^
+          <span className="mr-1">←</span>
+          返回
         </button>
         <h1 className="text-xl font-bold text-white">
-          �ڪ��`�N�ƶ��޲z
+          我的注意事項管理
         </h1>
         <div className="w-8"></div>
       </div>
@@ -90,20 +90,20 @@ const CustomTipsManager = ({ exerciseData, onBack }) => {
         <div className="text-center py-12">
           <div className="text-6xl mb-4">?</div>
           <h2 className="text-xl font-semibold text-white mb-2">
-            �٨S���ۭq�`�N�ƶ�
+            還沒有自訂注意事項
           </h2>
           <p className="text-gray-400">
-            �}�l���B�ʲK�[�z���ӤH�`�N�ƶ��a�I
+            開始為運動添加您的個人注意事項吧！
           </p>
         </div>
       ) : (
         <div className="space-y-6">
-          {/* �j�M�M�ާ@���s */}
+          {/* 搜尋和操作按鈕 */}
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <input
                 type="text"
-                placeholder="�j�M�B�ʦW�٩Ϊ`�N�ƶ����e..."
+                placeholder="搜尋運動名稱或注意事項內容..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400"
@@ -113,21 +113,21 @@ const CustomTipsManager = ({ exerciseData, onBack }) => {
               onClick={handleClearAllTips}
               className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
             >
-              �M���Ҧ��`�N�ƶ�
+              清除所有注意事項
             </button>
           </div>
 
-          {/* �έp��T */}
+          {/* 統計資訊 */}
           <div className="bg-white bg-opacity-10 rounded-lg p-4 border border-white border-opacity-20">
             <div className="flex justify-between items-center text-sm text-gray-300">
-              <span>�`�@ {allCustomTips.length} �ӹB�ʦ��ۭq�`�N�ƶ�</span>
+              <span>總共 {allCustomTips.length} 個運動有自訂注意事項</span>
               {searchTerm && (
-                <span>�j�M���G�G{filteredTips.length} ��</span>
+                <span>搜尋結果：{filteredTips.length} 個</span>
               )}
             </div>
           </div>
 
-          {/* �`�N�ƶ��C�� */}
+          {/* 注意事項列表 */}
           <div className="space-y-4">
             {filteredTips.map((tip) => (
               <div
@@ -147,7 +147,7 @@ const CustomTipsManager = ({ exerciseData, onBack }) => {
                     onClick={() => handleClearExerciseTips(tip.exerciseId)}
                     className="text-red-400 hover:text-red-300 transition-colors text-sm"
                   >
-                    �M��
+                    清除
                   </button>
                 </div>
                 <div className="bg-blue-900 bg-opacity-30 rounded-lg p-3 border border-blue-400 border-opacity-30">
@@ -167,7 +167,7 @@ const CustomTipsManager = ({ exerciseData, onBack }) => {
           {searchTerm && filteredTips.length === 0 && (
             <div className="text-center py-8">
               <p className="text-gray-400">
-                �S�����ŦX�j�M���󪺪`�N�ƶ�
+                沒有找到符合搜尋條件的注意事項
               </p>
             </div>
           )}

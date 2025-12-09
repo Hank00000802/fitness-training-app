@@ -26,14 +26,14 @@ function App() {
     // 完全清理瀏覽器歷史記錄，回到乾淨的首頁狀態
     window.history.replaceState(
       { page: 'home' },
-      '健身訓練 APP',
+      'Fitness Training App',
       '/'
     );
     
     // 更新頁面標題
-    document.title = '健身訓練 APP';
+    document.title = 'Fitness Training App';
     
-    console.log('系統狀態已完全重置');
+    console.log('System state has been fully reset');
   }, []);
 
   const handleBackToList = useCallback(() => {
@@ -43,7 +43,7 @@ function App() {
     // 這樣當用戶再次按返回時，會回到首頁而不是詳情頁
     window.history.replaceState(
       { page: 'exerciseList', bodyPart: selectedBodyPart, exercise: null },
-      `${selectedBodyPart?.name} 動作列表`,
+      `${selectedBodyPart?.name} Exercises`,
       '#exerciseList'
     );
   }, [selectedBodyPart]);
@@ -105,11 +105,11 @@ function App() {
 
     // 為其他頁面添加歷史記錄
     const pageTitle = currentPage === 'exerciseList' 
-      ? `${selectedBodyPart?.name} 動作列表` 
-      : `${selectedExercise?.name} 注意事項`;
+      ? `${selectedBodyPart?.name} Exercises` 
+      : `${selectedExercise?.name} Tips`;
     
     // 更新頁面標題
-    document.title = `${pageTitle} - 健身訓練 APP`;
+    document.title = `${pageTitle} - Fitness Training App`;
     
     // 使用 pushState 添加新的歷史記錄，保持完整的導航歷史
     // 但只在用戶主動導航時添加，不在 popstate 事件後添加

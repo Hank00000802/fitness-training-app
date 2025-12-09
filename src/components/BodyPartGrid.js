@@ -24,7 +24,7 @@ const BodyPartGrid = ({ bodyParts, onBodyPartSelect }) => {
         ))}
       </div>
       
-      {/* ºu°Ê«ü¥Ü¾¹ */}
+      {/* æ»¾å‹•æŒ‡ç¤ºå™¨ */}
       <div className="flex justify-center mt-6 space-x-2">
         <div className="w-2 h-2 bg-white bg-opacity-60 rounded-full"></div>
         <div className="w-2 h-2 bg-white bg-opacity-60 rounded-full"></div>
