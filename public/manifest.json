@@ -1,7 +1,7 @@
 {
-  "short_name": "健身訓練",
-  "name": "健身訓練 APP",
-  "description": "健身訓練應用程式",
+  "short_name": "Fitness Training",
+  "name": "Fitness Training App",
+  "description": "Fitness training application",
   "icons": [
     {
       "src": "favicon.ico",
@@ -24,4 +24,4 @@
   "theme_color": "#1f2937",
   "background_color": "#1f2937",
   "orientation": "portrait"
-} 
+}

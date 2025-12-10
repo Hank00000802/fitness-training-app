@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import BodyPartGrid from './components/BodyPartGrid';
 import ExerciseList from './components/ExerciseList';
 import ExerciseDetail from './components/ExerciseDetail';
-import { exerciseData } from './data/exerciseData';
+import AddExerciseForm from './components/AddExerciseForm';
+import { exerciseData, addCustomExercise, getExercisesForBodyPart } from './data/exerciseData';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -48,6 +49,23 @@ function App() {
     );
   }, [selectedBodyPart]);
 
+  const handleAddExercise = () => {
+    setCurrentPage('addExercise');
+  };
+
+  const handleSubmitExercise = async (exerciseData) => {
+    if (!selectedBodyPart) {
+      return;
+    }
+    addCustomExercise(selectedBodyPart.id, exerciseData);
+    window.alert('Exercise added successfully!');
+    setCurrentPage('exerciseList');
+  };
+
+  const handleCancelAddExercise = () => {
+    setCurrentPage('exerciseList');
+  };
+
   // 處理手機返回鍵
   useEffect(() => {
     // 防抖標記，防止快速連續按返回鍵
@@ -70,6 +88,8 @@ function App() {
         // 如果在動作詳情頁，返回動作列表
         // 直接調用 handleBackToList
         handleBackToList();
+      } else if (currentPage === 'addExercise') {
+        handleCancelAddExercise();
       } else if (currentPage === 'exerciseList') {
         // 如果在動作列表頁，返回首頁
         // 直接調用 handleBackToHome，與左上角返回鍵完全一致
@@ -93,7 +113,7 @@ function App() {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [currentPage, selectedBodyPart, handleBackToList, handleBackToHome]);
+  }, [currentPage, selectedBodyPart, handleBackToList, handleBackToHome, handleCancelAddExercise]);
 
   // 更新瀏覽器歷史記錄
   useEffect(() => {
@@ -106,6 +126,8 @@ function App() {
     // 為其他頁面添加歷史記錄
     const pageTitle = currentPage === 'exerciseList' 
       ? `${selectedBodyPart?.name} Exercises` 
+      : currentPage === 'addExercise'
+      ? `Add Exercise - ${selectedBodyPart?.name}`
       : `${selectedExercise?.name} Tips`;
     
     // 更新頁面標題
@@ -147,9 +169,10 @@ function App() {
         return (
           <ExerciseList
             bodyPart={selectedBodyPart}
-            exercises={exerciseData.exercises[selectedBodyPart.id]}
+            exercises={getExercisesForBodyPart(selectedBodyPart?.id)}
             onExerciseSelect={handleExerciseSelect}
             onBack={handleBackToHome}
+            onAddExercise={handleAddExercise}
           />
         );
       case 'exerciseDetail':
@@ -157,6 +180,14 @@ function App() {
           <ExerciseDetail
             exercise={selectedExercise}
             onBack={handleBackToHome}
+          />
+        );
+      case 'addExercise':
+        return (
+          <AddExerciseForm
+            bodyPart={selectedBodyPart}
+            onSubmit={handleSubmitExercise}
+            onCancel={handleCancelAddExercise}
           />
         );
       default:

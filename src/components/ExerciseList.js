@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack }) => {
+const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExercise }) => {
   console.log('ExerciseList - bodyPart:', bodyPart);
   console.log('ExerciseList - exercises:', exercises);
   
@@ -15,13 +15,13 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack }) => {
           返回首頁
         </button>
         <h1 className="text-2xl font-bold text-white">
-          部位動作 - {bodyPart.name}
+          Exercise List - {bodyPart.name}
         </h1>
         <div className="w-8"></div>
       </div>
       
       <div className="space-y-4">
-        {exercises.map((exercise) => (
+        {(exercises || []).map((exercise) => (
           <div
             key={exercise.id}
             onClick={() => onExerciseSelect(exercise)}
@@ -50,16 +50,23 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack }) => {
                   {exercise.description}
                 </p>
               </div>
-              <span className="text-blue-400">→</span>
+              <span className="text-blue-400">››</span>
             </div>
           </div>
         ))}
       </div>
-      
-      <div className="flex justify-center mt-6 space-x-2">
-        <div className="w-2 h-2 bg-white bg-opacity-60 rounded-full"></div>
-        <div className="w-2 h-2 bg-white bg-opacity-60 rounded-full"></div>
-        <div className="w-2 h-2 bg-white bg-opacity-60 rounded-full"></div>
+
+      <div className="mt-8 pt-6 border-t border-white border-opacity-20">
+        <button
+          onClick={onAddExercise}
+          className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
+        >
+          <span className="text-xl">+</span>
+          <span className="font-semibold">Add Exercise</span>
+        </button>
+        <p className="text-center text-sm text-gray-400 mt-2">
+          Add your own exercises for {bodyPart.name}
+        </p>
       </div>
     </div>
   );
