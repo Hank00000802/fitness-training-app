@@ -62,9 +62,9 @@ function App() {
     setCurrentPage('exerciseList');
   };
 
-  const handleCancelAddExercise = () => {
+  const handleCancelAddExercise = useCallback(() => {
     setCurrentPage('exerciseList');
-  };
+  }, []);
 
   // 處理手機返回鍵
   useEffect(() => {
