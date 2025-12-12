@@ -86,7 +86,7 @@ const ExerciseDetail = ({ exercise, onBack, onDelete }) => {
           onClick={onBack}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1">返回</span>
+          <span className="mr-1"></span>
           返回上一頁
         </button>
         <h1 className="text-xl font-bold text-white">

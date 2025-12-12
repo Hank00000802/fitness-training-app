@@ -11,7 +11,7 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExer
           onClick={onBack}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1">⭠</span>
+          <span className="mr-1"></span>
           返回部位列表
         </button>
         <h1 className="text-2xl font-bold text-white">
@@ -50,7 +50,7 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExer
                   {exercise.description}
                 </p>
               </div>
-              <span className="text-blue-400">⭢</span>
+              <span className="text-blue-400">查看</span>
             </div>
             {/* Always allow deletion when handler is provided */}
             {onDelete && (

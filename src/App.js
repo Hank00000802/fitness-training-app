@@ -9,29 +9,30 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedBodyPart, setSelectedBodyPart] = useState(null);
   const [selectedExercise, setSelectedExercise] = useState(null);
+  const [removedExerciseIds, setRemovedExerciseIds] = useState([]);
 
   const handleBackToHome = useCallback(() => {
-    // ­«¸m©Ò¦³ª¬ºA
+    // ï¿½ï¿½ï¿½mï¿½Ò¦ï¿½ï¿½ï¿½ï¿½A
     setCurrentPage('home');
     setSelectedBodyPart(null);
     setSelectedExercise(null);
     
-    // ­«¸m¨¾§Ý¼Ð°O
+    // ï¿½ï¿½ï¿½mï¿½ï¿½ï¿½Ý¼Ð°O
     if (window.popStateHandler) {
       window.popStateHandler.isProcessingPopState = false;
     }
     
-    // ­«¸m popstate ¨Æ¥ó¼Ð°O
+    // ï¿½ï¿½ï¿½m popstate ï¿½Æ¥ï¿½Ð°O
     window.isPopStateEvent = false;
     
-    // §¹¥þ²M²zÂsÄý¾¹¾ú¥v°O¿ý¡A¦^¨ì°®²bªº­º­¶ª¬ºA
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Mï¿½zï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Oï¿½ï¿½ï¿½Aï¿½^ï¿½ì°®ï¿½bï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½A
     window.history.replaceState(
       { page: 'home' },
       'Fitness Training App',
       '/'
     );
     
-    // §ó·s­¶­±¼ÐÃD
+    // ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½D
     document.title = 'Fitness Training App';
     
     console.log('System state has been fully reset');
@@ -40,8 +41,8 @@ function App() {
   const handleBackToList = useCallback(() => {
     setCurrentPage('exerciseList');
     setSelectedExercise(null);
-    // ±q¸Ô±¡­¶ªð¦^¦Cªí­¶®É¡A»Ý­n´À´«·í«eªº¾ú¥v°O¿ý
-    // ³o¼Ë·í¥Î¤á¦A¦¸«öªð¦^®É¡A·|¦^¨ì­º­¶¦Ó¤£¬O¸Ô±¡­¶
+    // ï¿½qï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½É¡Aï¿½Ý­nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Oï¿½ï¿½
+    // ï¿½oï¿½Ë·ï¿½ï¿½Î¤ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½É¡Aï¿½|ï¿½^ï¿½ì­ºï¿½ï¿½ï¿½Ó¤ï¿½ï¿½Oï¿½Ô±ï¿½ï¿½ï¿½
     window.history.replaceState(
       { page: 'exerciseList', bodyPart: selectedBodyPart, exercise: null },
       `${selectedBodyPart?.name} Exercises`,
@@ -70,24 +71,46 @@ function App() {
   // key to force re-render of lists when localStorage changes
   const [, setRefreshKey] = useState(0);
 
+  // load removed built-in exercises
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem('removedExerciseIds');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setRemovedExerciseIds(Array.isArray(parsed) ? parsed : []);
+      }
+    } catch (err) {
+      console.error('Failed to load removed exercises', err);
+      setRemovedExerciseIds([]);
+    }
+  }, []);
+
   const handleDeleteExercise = useCallback((exerciseId) => {
     if (!selectedBodyPart) return;
     try {
-      const stored = window.localStorage.getItem('customExercises');
-      const data = stored ? JSON.parse(stored) : {};
-      const list = data[selectedBodyPart.id] || [];
-      const newList = list.filter(e => e.id !== exerciseId);
-      if (newList.length === list.length) {
-        // nothing removed (probably built-in)
-        window.alert('Cannot delete built-in exercise');
-        return;
-      }
-      if (newList.length) {
-        data[selectedBodyPart.id] = newList;
+      const isCustom =
+        (selectedExercise && selectedExercise.id === exerciseId && selectedExercise.isCustom) ||
+        String(exerciseId).startsWith('custom_');
+
+      if (isCustom) {
+        const stored = window.localStorage.getItem('customExercises');
+        const data = stored ? JSON.parse(stored) : {};
+        const list = data[selectedBodyPart.id] || [];
+        const newList = list.filter(e => e.id !== exerciseId);
+        if (newList.length) {
+          data[selectedBodyPart.id] = newList;
+        } else {
+          delete data[selectedBodyPart.id];
+        }
+        window.localStorage.setItem('customExercises', JSON.stringify(data));
       } else {
-        delete data[selectedBodyPart.id];
+        const storedRemoved = window.localStorage.getItem('removedExerciseIds');
+        const removed = storedRemoved ? JSON.parse(storedRemoved) : [];
+        const newRemoved = Array.from(new Set([...removed, exerciseId]));
+        window.localStorage.setItem('removedExerciseIds', JSON.stringify(newRemoved));
+        setRemovedExerciseIds(newRemoved);
       }
-      window.localStorage.setItem('customExercises', JSON.stringify(data));
+
       // if viewing deleted exercise, go back to list
       if (selectedExercise && selectedExercise.id === exerciseId) {
         setSelectedExercise(null);
@@ -99,75 +122,75 @@ function App() {
     }
   }, [selectedBodyPart, selectedExercise]);
 
-  // ³B²z¤â¾÷ªð¦^Áä
+  // ï¿½Bï¿½zï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½ï¿½
   useEffect(() => {
-    // ¨¾§Ý¼Ð°O¡A¨¾¤î§Ö³t³sÄò«öªð¦^Áä
+    // ï¿½ï¿½ï¿½Ý¼Ð°Oï¿½Aï¿½ï¿½ï¿½ï¿½Ö³tï¿½sï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½ï¿½
     let isProcessingPopState = false;
     
     const handlePopState = () => {
-      // ¦pªG¥¿¦b³B²z«e¤@­Ó popstate ¨Æ¥ó¡A«h©¿²¤
+      // ï¿½pï¿½Gï¿½ï¿½ï¿½bï¿½Bï¿½zï¿½eï¿½@ï¿½ï¿½ popstate ï¿½Æ¥ï¿½Aï¿½hï¿½ï¿½ï¿½ï¿½
       if (isProcessingPopState) {
         return;
       }
       
-      // ³]¸m³B²z¼Ð°O
+      // ï¿½]ï¿½mï¿½Bï¿½zï¿½Ð°O
       isProcessingPopState = true;
       
-      // ³]¸m¼Ð°O¡Aªí¥Ü³o¬O popstate ¨Æ¥ó
+      // ï¿½]ï¿½mï¿½Ð°Oï¿½Aï¿½ï¿½ï¿½Ü³oï¿½O popstate ï¿½Æ¥ï¿½
       window.isPopStateEvent = true;
       
-      // ®Ú¾Ú·í«e­¶­±ª¬ºA¨M©wªð¦^¦æ¬°
+      // ï¿½Ú¾Ú·ï¿½ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Mï¿½wï¿½ï¿½^ï¿½æ¬°
       if (currentPage === 'exerciseDetail') {
-        // ¦pªG¦b°Ê§@¸Ô±¡­¶¡Aªð¦^°Ê§@¦Cªí
-        // ª½±µ½Õ¥Î handleBackToList
+        // ï¿½pï¿½Gï¿½bï¿½Ê§@ï¿½Ô±ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½^ï¿½Ê§@ï¿½Cï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Õ¥ï¿½ handleBackToList
         handleBackToList();
       } else if (currentPage === 'addExercise') {
         handleCancelAddExercise();
       } else if (currentPage === 'exerciseList') {
-        // ¦pªG¦b°Ê§@¦Cªí­¶¡Aªð¦^­º­¶
-        // ª½±µ½Õ¥Î handleBackToHome¡A»P¥ª¤W¨¤ªð¦^Áä§¹¥þ¤@­P
+        // ï¿½pï¿½Gï¿½bï¿½Ê§@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Õ¥ï¿½ handleBackToHomeï¿½Aï¿½Pï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½^ï¿½ä§¹ï¿½ï¿½ï¿½@ï¿½P
         handleBackToHome();
       }
-      // ¦pªG¦b­º­¶¡A¤£°µ¥ô¦ó³B²z¡]ÅýÂsÄý¾¹³B²z¡^
+      // ï¿½pï¿½Gï¿½bï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Bï¿½zï¿½]ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Bï¿½zï¿½^
       
-      // ©µ¿ð­«¸m³B²z¼Ð°O¡A¨¾¤î§Ö³t³sÄòÄ²µo
+      // ï¿½ï¿½ï¿½ð­«¸mï¿½Bï¿½zï¿½Ð°Oï¿½Aï¿½ï¿½ï¿½ï¿½Ö³tï¿½sï¿½ï¿½Ä²ï¿½o
       setTimeout(() => {
         isProcessingPopState = false;
-      }, 300); // 300ms ªº¨¾§Ý©µ¿ð
+      }, 300); // 300ms ï¿½ï¿½ï¿½ï¿½ï¿½Ý©ï¿½ï¿½ï¿½
     };
     
-    // ±N³B²z¾¹¼ÉÅS¨ì¥þ§½¡A¥H«K¥~³¡­«¸m
+    // ï¿½Nï¿½Bï¿½zï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Hï¿½Kï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½m
     window.popStateHandler = { isProcessingPopState };
     
-    // ºÊÅ¥ÂsÄý¾¹ªº popstate ¨Æ¥ó¡]¥]¬A¤â¾÷ªð¦^Áä¡^
+    // ï¿½ï¿½Å¥ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ popstate ï¿½Æ¥ï¿½]ï¿½]ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½ï¿½^
     window.addEventListener('popstate', handlePopState);
 
-    // ²M²z¨Æ¥óºÊÅ¥¾¹
+    // ï¿½Mï¿½zï¿½Æ¥ï¿½ï¿½Å¥ï¿½ï¿½
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
   }, [currentPage, selectedBodyPart, handleBackToList, handleBackToHome, handleCancelAddExercise]);
 
-  // §ó·sÂsÄý¾¹¾ú¥v°O¿ý
+  // ï¿½ï¿½sï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Oï¿½ï¿½
   useEffect(() => {
-    // ®Ú¾Ú­¶­±ª¬ºA§ó·sÂsÄý¾¹¾ú¥v°O¿ý
+    // ï¿½Ú¾Ú­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½sï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Oï¿½ï¿½
     if (currentPage === 'home') {
-      // ­º­¶¤£»Ý­nÃB¥~³B²z
+      // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý­nï¿½Bï¿½~ï¿½Bï¿½z
       return;
     }
 
-    // ¬°¨ä¥L­¶­±²K¥[¾ú¥v°O¿ý
+    // ï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Kï¿½[ï¿½ï¿½ï¿½vï¿½Oï¿½ï¿½
     const pageTitle = currentPage === 'exerciseList' 
       ? `${selectedBodyPart?.name} Exercises` 
       : currentPage === 'addExercise'
       ? `Add Exercise - ${selectedBodyPart?.name}`
       : `${selectedExercise?.name} Tips`;
     
-    // §ó·s­¶­±¼ÐÃD
+    // ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½D
     document.title = `${pageTitle} - Fitness Training App`;
     
-    // ¨Ï¥Î pushState ²K¥[·sªº¾ú¥v°O¿ý¡A«O«ù§¹¾ãªº¾É¯è¾ú¥v
-    // ¦ý¥u¦b¥Î¤á¥D°Ê¾É¯è®É²K¥[¡A¤£¦b popstate ¨Æ¥ó«á²K¥[
+    // ï¿½Ï¥ï¿½ pushState ï¿½Kï¿½[ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Oï¿½ï¿½ï¿½Aï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ãªºï¿½É¯ï¿½ï¿½ï¿½v
+    // ï¿½ï¿½ï¿½uï¿½bï¿½Î¤ï¿½Dï¿½Ê¾É¯ï¿½É²Kï¿½[ï¿½Aï¿½ï¿½ï¿½b popstate ï¿½Æ¥ï¿½ï¿½Kï¿½[
     if (!window.isPopStateEvent) {
       window.history.pushState(
         { page: currentPage, bodyPart: selectedBodyPart, exercise: selectedExercise },
@@ -175,7 +198,7 @@ function App() {
         `#${currentPage}`
       );
     }
-    // ­«¸m¼Ð°O
+    // ï¿½ï¿½ï¿½mï¿½Ð°O
     window.isPopStateEvent = false;
   }, [currentPage, selectedBodyPart, selectedExercise]);
 
@@ -199,10 +222,12 @@ function App() {
           />
         );
       case 'exerciseList':
+        const filteredExercises = getExercisesForBodyPart(selectedBodyPart?.id)
+          .filter(ex => !removedExerciseIds.includes(ex.id));
         return (
           <ExerciseList
             bodyPart={selectedBodyPart}
-            exercises={getExercisesForBodyPart(selectedBodyPart?.id)}
+            exercises={filteredExercises}
             onExerciseSelect={handleExerciseSelect}
             onBack={handleBackToHome}
             onAddExercise={handleAddExercise}
