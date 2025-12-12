@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExercise }) => {
+const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExercise, onDelete }) => {
   console.log('ExerciseList - bodyPart:', bodyPart);
   console.log('ExerciseList - exercises:', exercises);
   
@@ -11,8 +11,8 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExer
           onClick={onBack}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1">←</span>
-          返回首頁
+          <span className="mr-1">⭠</span>
+          返回部位列表
         </button>
         <h1 className="text-2xl font-bold text-white">
           Exercise List - {bodyPart.name}
@@ -27,7 +27,7 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExer
             onClick={() => onExerciseSelect(exercise)}
             className="bg-white bg-opacity-10 rounded-lg p-6 cursor-pointer 
                      hover:bg-opacity-20 transition-all duration-200 
-                     border border-white border-opacity-20 hover:border-opacity-40"
+                     border border-white border-opacity-20 hover:border-opacity-40 relative"
           >
             <div className="flex items-center space-x-4">
               <div className="flex-shrink-0">
@@ -50,8 +50,22 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExer
                   {exercise.description}
                 </p>
               </div>
-              <span className="text-blue-400">››</span>
+              <span className="text-blue-400">⭢</span>
             </div>
+            {/* Always allow deletion when handler is provided */}
+            {onDelete && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (window.confirm('Delete this exercise?')) {
+                    onDelete(exercise.id);
+                  }
+                }}
+                className="absolute top-3 right-3 text-xs bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
+              >
+                Delete
+              </button>
+            )}
           </div>
         ))}
       </div>

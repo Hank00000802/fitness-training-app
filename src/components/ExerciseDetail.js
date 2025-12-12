@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const ExerciseDetail = ({ exercise, onBack }) => {
+const ExerciseDetail = ({ exercise, onBack, onDelete }) => {
   const [imageError, setImageError] = useState(false);
   const [customTips, setCustomTips] = useState('');
   const [savedCustomTips, setSavedCustomTips] = useState([]);
@@ -13,9 +13,9 @@ const ExerciseDetail = ({ exercise, onBack }) => {
     setImageError(true);
   };
   
-  const defaultImage = 'https://via.placeholder.com/300x200/3b82f6/ffffff?text=運動示意圖';
+  const defaultImage = 'https://via.placeholder.com/300x200/3b82f6/ffffff?text=%E6%88%AA%E5%9C%96';
   
-  // 載入已儲存的自訂注意事項
+  // Load custom tips for this exercise from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem(`customTips_${exercise.id}`);
     if (saved) {
@@ -23,14 +23,14 @@ const ExerciseDetail = ({ exercise, onBack }) => {
         const parsedTips = JSON.parse(saved);
         setSavedCustomTips(Array.isArray(parsedTips) ? parsedTips : []);
       } catch (e) {
-        // 如果解析失敗，嘗試舊格式
+        // Fallback: legacy plain-text format separated by blank lines
         const oldFormat = saved.split('\n\n').filter(tip => tip.trim());
         setSavedCustomTips(oldFormat);
       }
     }
   }, [exercise.id]);
   
-  // 儲存自訂注意事項
+  // Save a new custom tip to localStorage
   const handleSaveCustomTip = () => {
     if (customTips.trim()) {
       const newCustomTips = [...savedCustomTips, customTips.trim()];
@@ -40,21 +40,21 @@ const ExerciseDetail = ({ exercise, onBack }) => {
     }
   };
   
-  // 清除所有自訂注意事項
+  // Clear all custom tips for this exercise
   const handleClearCustomTips = () => {
-    if (window.confirm('確定要清除所有自訂注意事項嗎？此操作無法復原。')) {
+    if (window.confirm('確定要清除所有自訂提示嗎？')) {
       setSavedCustomTips([]);
       localStorage.removeItem(`customTips_${exercise.id}`);
     }
   };
   
-  // 開始編輯
+  // Start editing existing custom tips
   const handleStartEdit = () => {
     setEditText(savedCustomTips.join('\n\n'));
     setIsEditing(true);
   };
   
-  // 儲存編輯
+  // Save edited custom tips back to localStorage
   const handleSaveEdit = () => {
     const newTips = editText.split('\n\n').filter(tip => tip.trim());
     setSavedCustomTips(newTips);
@@ -63,13 +63,13 @@ const ExerciseDetail = ({ exercise, onBack }) => {
     setEditText('');
   };
   
-  // 取消編輯
+  // Cancel editing state
   const handleCancelEdit = () => {
     setIsEditing(false);
     setEditText('');
   };
   
-  // 刪除單條注意事項
+  // Delete a single custom tip and sync to localStorage
   const handleDeleteTip = (index) => {
     const newTips = savedCustomTips.filter((_, i) => i !== index);
     setSavedCustomTips(newTips);
@@ -86,13 +86,27 @@ const ExerciseDetail = ({ exercise, onBack }) => {
           onClick={onBack}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1">←</span>
-          返回首頁
+          <span className="mr-1">返回</span>
+          返回上一頁
         </button>
         <h1 className="text-xl font-bold text-white">
-          {exercise.name} 注意事項
+          {exercise.name} 詳細資訊
         </h1>
-        <div className="w-8"></div>
+        <div className="w-8">
+          {/* Allow deletion when handler is provided */}
+          {onDelete ? (
+            <button
+              onClick={() => {
+                if (window.confirm('Delete this exercise?')) {
+                  onDelete(exercise.id);
+                }
+              }}
+              className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+            >
+              Delete
+            </button>
+          ) : null}
+        </div>
       </div>
       
       <div className="space-y-6">
@@ -106,13 +120,13 @@ const ExerciseDetail = ({ exercise, onBack }) => {
             />
           </div>
           <p className="text-center text-sm text-gray-300 mt-2">
-            動作示意圖
+            圖片預覽
           </p>
         </div>
         
         <div className="bg-white bg-opacity-10 rounded-lg p-4 border border-white border-opacity-20">
           <h3 className="text-lg font-semibold text-white mb-2">
-            運動說明
+            動作描述
           </h3>
           <p className="text-gray-300">
             {exercise.description}
@@ -120,7 +134,7 @@ const ExerciseDetail = ({ exercise, onBack }) => {
         </div>
         
         <div className="space-y-3">
-          {/* 原始注意事項 */}
+          {/* 原始提示 */}
           {exercise.tips.map((tip, index) => (
             <div
               key={`original-${index}`}
@@ -135,7 +149,7 @@ const ExerciseDetail = ({ exercise, onBack }) => {
             </div>
           ))}
           
-          {/* 自訂注意事項 */}
+          {/* 自訂提示 */}
           {savedCustomTips.map((tip, index) => (
             <div
               key={`custom-${index}`}
@@ -149,7 +163,7 @@ const ExerciseDetail = ({ exercise, onBack }) => {
                   onClick={() => handleDeleteTip(index)}
                   className="text-xs text-red-400 hover:text-red-300 transition-colors"
                 >
-                  ✕
+                  刪除
                 </button>
               </div>
               <p className="text-gray-300">
@@ -159,18 +173,18 @@ const ExerciseDetail = ({ exercise, onBack }) => {
           ))}
         </div>
         
-        {/* 新增自訂注意事項區域 */}
+        {/* 自訂提示管理：編輯 / 新增 / 清除 */}
         <div className="bg-white bg-opacity-10 rounded-lg p-4 border border-white border-opacity-20">
           <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-            <span className="mr-2">📝</span>
-            新增我的注意事項
+            <span className="mr-2">提示</span>
+            自訂提示區
           </h3>
           
           {/* 編輯模式 */}
           {isEditing && (
             <div className="mb-4">
               <div className="flex justify-between items-center mb-2">
-                <h4 className="text-sm font-semibold text-blue-300">編輯所有自訂注意事項：</h4>
+                <h4 className="text-sm font-semibold text-blue-300">編輯自訂提示，使用空行分隔多筆</h4>
                 <div className="flex space-x-2">
                   <button
                     onClick={handleSaveEdit}
@@ -191,7 +205,7 @@ const ExerciseDetail = ({ exercise, onBack }) => {
                 onChange={(e) => setEditText(e.target.value)}
                 className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 resize-none"
                 rows="6"
-                placeholder="每行一個注意事項..."
+                placeholder="在此編輯自訂提示，使用空行分隔多筆..."
               />
             </div>
           )}
@@ -202,7 +216,7 @@ const ExerciseDetail = ({ exercise, onBack }) => {
               <textarea
                 value={customTips}
                 onChange={(e) => setCustomTips(e.target.value)}
-                placeholder="輸入您自己的注意事項..."
+                placeholder="在此輸入自訂提示..."
                 className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 resize-none"
                 rows="3"
                 maxLength={maxLength}
@@ -213,7 +227,7 @@ const ExerciseDetail = ({ exercise, onBack }) => {
                   disabled={!customTips.trim()}
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
                 >
-                  新增注意事項
+                  新增提示
                 </button>
                 <span className={`text-xs ${remainingChars < 50 ? 'text-red-400' : 'text-gray-400'}`}>
                   {customTips.length}/{maxLength}
@@ -222,20 +236,20 @@ const ExerciseDetail = ({ exercise, onBack }) => {
             </div>
           )}
           
-          {/* 管理按鈕 */}
+          {/* 管理控制區 */}
           {savedCustomTips.length > 0 && !isEditing && (
             <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-600">
               <button
                 onClick={handleStartEdit}
                 className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
               >
-                編輯所有自訂注意事項
+                編輯自訂提示
               </button>
               <button
                 onClick={handleClearCustomTips}
                 className="text-xs text-red-400 hover:text-red-300 transition-colors"
               >
-                清除所有自訂注意事項
+                清除全部提示
               </button>
             </div>
           )}
