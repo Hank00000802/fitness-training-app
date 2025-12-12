@@ -68,7 +68,7 @@ function App() {
   
 
   // key to force re-render of lists when localStorage changes
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [, setRefreshKey] = useState(0);
 
   const handleDeleteExercise = useCallback((exerciseId) => {
     if (!selectedBodyPart) return;
