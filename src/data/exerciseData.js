@@ -314,5 +314,19 @@ export const getExercisesForBodyPart = (bodyPartId) => {
   return [...base, ...custom];
 };
 
+export const deleteCustomExercise = (bodyPartId, exerciseId) => {
+  if (!dynamicExercises[bodyPartId]) {
+    return;
+  }
+  const list = dynamicExercises[bodyPartId];
+  const newList = list.filter(e => e.id !== exerciseId);
+  if (newList.length) {
+    dynamicExercises[bodyPartId] = newList;
+  } else {
+    delete dynamicExercises[bodyPartId];
+  }
+  saveCustomExercises();
+};
+
 // Load persisted custom exercises on module import
 loadCustomExercises();

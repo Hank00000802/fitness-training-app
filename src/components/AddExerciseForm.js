@@ -17,7 +17,7 @@ import React, { useState } from 'react';
 const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     name: '',
-    description: '簡單說明運動內容',
+    description: '簡單說明內容',
     image: null,
     imagePreview: null,
     tips: ['']
@@ -89,8 +89,7 @@ const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
         tips: formData.tips.filter(tip => tip.trim())
       };
       await onSubmit(submitData);
-      // Success notice in English to avoid garbled characters
-      window.alert('Exercise added successfully!');
+      // Parent component (App.js) will handle the success alert
     } catch (error) {
       console.error('Add exercise failed:', error);
       setErrors(prev => ({ ...prev, submit: 'Add exercise failed, please retry' }));

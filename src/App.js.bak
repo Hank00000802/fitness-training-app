@@ -3,7 +3,7 @@ import BodyPartGrid from './components/BodyPartGrid';
 import ExerciseList from './components/ExerciseList';
 import ExerciseDetail from './components/ExerciseDetail';
 import AddExerciseForm from './components/AddExerciseForm';
-import { exerciseData, addCustomExercise, getExercisesForBodyPart, deleteCustomExercise } from './data/exerciseData';
+import { exerciseData, addCustomExercise, getExercisesForBodyPart } from './data/exerciseData';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -12,27 +12,27 @@ function App() {
   const [removedExerciseIds, setRemovedExerciseIds] = useState([]);
 
   const handleBackToHome = useCallback(() => {
-    // Reset all page state
+    // ���m�Ҧ����A
     setCurrentPage('home');
     setSelectedBodyPart(null);
     setSelectedExercise(null);
     
-    // Reset popstate processing flag
+    // ���m���ݼаO
     if (window.popStateHandler) {
       window.popStateHandler.isProcessingPopState = false;
     }
     
-    // Clear popstate event flag
+    // ���m popstate �ƥ�аO
     window.isPopStateEvent = false;
     
-    // Update history to home page without triggering popstate event
+    // �����M�z�s�������v�O���A�^�찮�b���������A
     window.history.replaceState(
       { page: 'home' },
       'Fitness Training App',
       '/'
     );
     
-    // Update document title
+    // ��s�������D
     document.title = 'Fitness Training App';
     
     console.log('System state has been fully reset');
@@ -41,8 +41,8 @@ function App() {
   const handleBackToList = useCallback(() => {
     setCurrentPage('exerciseList');
     setSelectedExercise(null);
-    // Update history when returning to exercise list
-    // Preserve bodyPart selection in history state
+    // �q�Ա�����^�C�����ɡA�ݭn�������e�����v�O��
+    // �o�˷��Τ�A������^�ɡA�|�^�쭺���Ӥ��O�Ա���
     window.history.replaceState(
       { page: 'exerciseList', bodyPart: selectedBodyPart, exercise: null },
       `${selectedBodyPart?.name} Exercises`,
@@ -59,8 +59,6 @@ function App() {
       return;
     }
     addCustomExercise(selectedBodyPart.id, exerciseData);
-    // Force re-render to show newly added exercise
-    setRefreshKey(k => k + 1);
     window.alert('Exercise added successfully!');
     setCurrentPage('exerciseList');
   };
@@ -71,7 +69,7 @@ function App() {
   
 
   // key to force re-render of lists when localStorage changes
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [, setRefreshKey] = useState(0);
 
   // load removed built-in exercises
   useEffect(() => {
@@ -87,12 +85,6 @@ function App() {
     }
   }, []);
 
-  // Reload custom exercises on app mount to ensure persistence
-  useEffect(() => {
-    // Force re-render to load persisted custom exercises
-    setRefreshKey(k => k + 1);
-  }, []);
-
   const handleDeleteExercise = useCallback((exerciseId) => {
     if (!selectedBodyPart) return;
     try {
@@ -101,8 +93,16 @@ function App() {
         String(exerciseId).startsWith('custom_');
 
       if (isCustom) {
-        // Use the deleteCustomExercise function to sync both memory and localStorage
-        deleteCustomExercise(selectedBodyPart.id, exerciseId);
+        const stored = window.localStorage.getItem('customExercises');
+        const data = stored ? JSON.parse(stored) : {};
+        const list = data[selectedBodyPart.id] || [];
+        const newList = list.filter(e => e.id !== exerciseId);
+        if (newList.length) {
+          data[selectedBodyPart.id] = newList;
+        } else {
+          delete data[selectedBodyPart.id];
+        }
+        window.localStorage.setItem('customExercises', JSON.stringify(data));
       } else {
         const storedRemoved = window.localStorage.getItem('removedExerciseIds');
         const removed = storedRemoved ? JSON.parse(storedRemoved) : [];
@@ -116,81 +116,81 @@ function App() {
         setSelectedExercise(null);
         setCurrentPage('exerciseList');
       }
-      // Force re-render to reflect deletion
       setRefreshKey(k => k + 1);
     } catch (err) {
       console.error('Failed to delete custom exercise', err);
     }
   }, [selectedBodyPart, selectedExercise]);
 
-  // Handle browser back button with popstate event
+  // �B�z�����^��
   useEffect(() => {
-    // Initialize flag to prevent duplicate popstate processing
+    // ���ݼаO�A����ֳt�s�����^��
     let isProcessingPopState = false;
     
     const handlePopState = () => {
-      // Prevent processing multiple popstate events in quick succession
+      // �p�G���b�B�z�e�@�� popstate �ƥ�A�h����
       if (isProcessingPopState) {
         return;
       }
       
-      // Set processing flag to true
+      // �]�m�B�z�аO
       isProcessingPopState = true;
       
-      // Mark this as a popstate event to prevent pushState call
+      // �]�m�аO�A���ܳo�O popstate �ƥ�
       window.isPopStateEvent = true;
       
-      // Navigate based on current page
+      // �ھڷ��e�������A�M�w��^�欰
       if (currentPage === 'exerciseDetail') {
-        // Return to exercise list from detail view
-        // Call handleBackToList function
+        // �p�G�b�ʧ@�Ա����A��^�ʧ@�C��
+        // �����ե� handleBackToList
         handleBackToList();
       } else if (currentPage === 'addExercise') {
         handleCancelAddExercise();
       } else if (currentPage === 'exerciseList') {
-        // Return to home from exercise list
+        // �p�G�b�ʧ@�C�����A��^����
+        // �����ե� handleBackToHome�A�P���W����^�䧹���@�P
         handleBackToHome();
       }
-      // If on home page, no action needed
+      // �p�G�b�����A��������B�z�]���s�����B�z�^
       
-      // Reset processing flag after a short delay
+      // ���𭫸m�B�z�аO�A����ֳt�s��Ĳ�o
       setTimeout(() => {
         isProcessingPopState = false;
-      }, 300); // 300ms delay to debounce events
+      }, 300); // 300ms �����ݩ���
     };
     
-    // Store handler reference for external access
+    // �N�B�z�����S������A�H�K�~�����m
     window.popStateHandler = { isProcessingPopState };
     
-    // Add listener for browser popstate event
+    // ��ť�s������ popstate �ƥ�]�]�A�����^��^
     window.addEventListener('popstate', handlePopState);
 
-    // Cleanup listener on unmount
+    // �M�z�ƥ��ť��
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
   }, [currentPage, selectedBodyPart, handleBackToList, handleBackToHome, handleCancelAddExercise]);
 
-  // Update document title and history based on current page
+  // ��s�s�������v�O��
   useEffect(() => {
-    // Skip title update when on home page
+    // �ھڭ������A��s�s�������v�O��
     if (currentPage === 'home') {
-      // No need to update title or history on home
+      // �������ݭn�B�~�B�z
       return;
     }
 
-    // Generate appropriate page title based on current page
+    // ����L�����K�[���v�O��
     const pageTitle = currentPage === 'exerciseList' 
       ? `${selectedBodyPart?.name} Exercises` 
       : currentPage === 'addExercise'
       ? `Add Exercise - ${selectedBodyPart?.name}`
       : `${selectedExercise?.name} Tips`;
     
-    // Update document title
+    // ��s�������D
     document.title = `${pageTitle} - Fitness Training App`;
     
-    // Only push state if this was not triggered by a popstate event
-    // This prevents duplicate history entries when using browser back/forward
+    // �ϥ� pushState �K�[�s�����v�O���A�O�����㪺�ɯ���v
+    // ���u�b�Τ�D�ʾɯ�ɲK�[�A���b popstate �ƥ��K�[
     if (!window.isPopStateEvent) {
       window.history.pushState(
         { page: currentPage, bodyPart: selectedBodyPart, exercise: selectedExercise },
@@ -198,7 +198,7 @@ function App() {
         `#${currentPage}`
       );
     }
-    // Clear popstate event flag
+    // ���m�аO
     window.isPopStateEvent = false;
   }, [currentPage, selectedBodyPart, selectedExercise]);
 
@@ -226,7 +226,6 @@ function App() {
           .filter(ex => !removedExerciseIds.includes(ex.id));
         return (
           <ExerciseList
-            key={`exercise-list-${refreshKey}`}
             bodyPart={selectedBodyPart}
             exercises={filteredExercises}
             onExerciseSelect={handleExerciseSelect}
@@ -238,7 +237,6 @@ function App() {
       case 'exerciseDetail':
         return (
           <ExerciseDetail
-            key={`exercise-detail-${refreshKey}`}
             exercise={selectedExercise}
             onBack={handleBackToHome}
             onDelete={handleDeleteExercise}
@@ -247,7 +245,6 @@ function App() {
       case 'addExercise':
         return (
           <AddExerciseForm
-            key={`add-exercise-${refreshKey}`}
             bodyPart={selectedBodyPart}
             onSubmit={handleSubmitExercise}
             onCancel={handleCancelAddExercise}
@@ -270,4 +267,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 

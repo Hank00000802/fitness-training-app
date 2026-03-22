@@ -70,13 +70,9 @@ MIT License
 
 ## 開發與提交流程
 
-步驟 0：開發測試
+步驟 1：開發測試
+npm run build
 serve -s build
-
-步驟 1：啟動開發
-```bash
-npm start
-```
 
 步驟 2：提交程式碼
 ```bash
@@ -89,3 +85,8 @@ git push
 - Netlify 自動化部署
 - 約需 1-2 分鐘
 - 確認部署頁面正常
+
+步驟 4：打包
+- PWAbuilder將...netlify.com放入打包
+- 打包成功後，複製PWA的打包成功網址到手機上
+- 安裝Android或IOS包即可
