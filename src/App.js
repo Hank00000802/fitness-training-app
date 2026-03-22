@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import localforage from 'localforage';
 import BodyPartGrid from './components/BodyPartGrid';
 import ExerciseList from './components/ExerciseList';
 import ExerciseDetail from './components/ExerciseDetail';
 import AddExerciseForm from './components/AddExerciseForm';
-import { exerciseData, addCustomExercise, getExercisesForBodyPart, deleteCustomExercise } from './data/exerciseData';
+import { exerciseData, addCustomExercise, getExercisesForBodyPart, deleteCustomExercise, initCustomExercises } from './data/exerciseData';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -58,7 +59,7 @@ function App() {
     if (!selectedBodyPart) {
       return;
     }
-    addCustomExercise(selectedBodyPart.id, exerciseData);
+    await addCustomExercise(selectedBodyPart.id, exerciseData);
     // Force re-render to show newly added exercise
     setRefreshKey(k => k + 1);
     window.alert('Exercise added successfully!');
@@ -73,27 +74,24 @@ function App() {
   // key to force re-render of lists when localStorage changes
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // load removed built-in exercises
+  // Initialize all persisted data from localforage on app mount
   useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem('removedExerciseIds');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setRemovedExerciseIds(Array.isArray(parsed) ? parsed : []);
+    const init = async () => {
+      await initCustomExercises();
+      try {
+        const stored = await localforage.getItem('removedExerciseIds');
+        if (Array.isArray(stored)) {
+          setRemovedExerciseIds(stored);
+        }
+      } catch (err) {
+        console.error('Failed to load removed exercises', err);
       }
-    } catch (err) {
-      console.error('Failed to load removed exercises', err);
-      setRemovedExerciseIds([]);
-    }
+      setRefreshKey(k => k + 1);
+    };
+    init();
   }, []);
 
-  // Reload custom exercises on app mount to ensure persistence
-  useEffect(() => {
-    // Force re-render to load persisted custom exercises
-    setRefreshKey(k => k + 1);
-  }, []);
-
-  const handleDeleteExercise = useCallback((exerciseId) => {
+  const handleDeleteExercise = useCallback(async (exerciseId) => {
     if (!selectedBodyPart) return;
     try {
       const isCustom =
@@ -101,13 +99,12 @@ function App() {
         String(exerciseId).startsWith('custom_');
 
       if (isCustom) {
-        // Use the deleteCustomExercise function to sync both memory and localStorage
-        deleteCustomExercise(selectedBodyPart.id, exerciseId);
+        await deleteCustomExercise(selectedBodyPart.id, exerciseId);
       } else {
-        const storedRemoved = window.localStorage.getItem('removedExerciseIds');
-        const removed = storedRemoved ? JSON.parse(storedRemoved) : [];
+        const stored = await localforage.getItem('removedExerciseIds');
+        const removed = Array.isArray(stored) ? stored : [];
         const newRemoved = Array.from(new Set([...removed, exerciseId]));
-        window.localStorage.setItem('removedExerciseIds', JSON.stringify(newRemoved));
+        await localforage.setItem('removedExerciseIds', newRemoved);
         setRemovedExerciseIds(newRemoved);
       }
 
@@ -119,7 +116,7 @@ function App() {
       // Force re-render to reflect deletion
       setRefreshKey(k => k + 1);
     } catch (err) {
-      console.error('Failed to delete custom exercise', err);
+      console.error('Failed to delete exercise', err);
     }
   }, [selectedBodyPart, selectedExercise]);
 

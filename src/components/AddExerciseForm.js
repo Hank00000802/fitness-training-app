@@ -17,7 +17,7 @@ import React, { useState } from 'react';
 const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     name: '',
-    description: 'ç°¡å–®èªªæ˜Žå…§å®¹',
+    description: 'Â²³æ»¡©ú¤º®e',
     image: null,
     imagePreview: null,
     tips: ['']
