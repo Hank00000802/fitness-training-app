@@ -5,6 +5,7 @@ import ExerciseList from './components/ExerciseList';
 import ExerciseDetail from './components/ExerciseDetail';
 import AddExerciseForm from './components/AddExerciseForm';
 import AddBodyPartForm from './components/AddBodyPartForm';
+import InstallPWA from './components/InstallPWA';
 import { addCustomExercise, getExercisesForBodyPart, deleteCustomExercise, initCustomExercises, getAllBodyParts, addCustomBodyPart, deleteCustomBodyPart, initCustomBodyParts } from './data/exerciseData';
 
 function App() {
@@ -311,6 +312,7 @@ function App() {
       <div className="container mx-auto px-4 py-8">
         {renderPage()}
       </div>
+      <InstallPWA />
     </div>
   );
 }

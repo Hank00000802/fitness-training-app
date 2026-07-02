@@ -18,7 +18,7 @@ The app is designed with a simple navigation flow, making it suitable for quick 
 
 ### Body Part Selection
 
-Users can select the body part they want to train from the home screen.
+Users can select the body part they want to train from the home screen. Custom body parts can also be added.
 
 ### Exercise List
 
@@ -34,9 +34,17 @@ Each exercise includes:
 * Training notes
 * Important tips or precautions
 
+### PWA Install (Add to Home Screen)
+
+The app is a **Progressive Web App (PWA)**. After deployment over HTTPS, users can install it directly to their phone home screen from the browser ¡X no app store required.
+
+* **Android (Chrome):** Tap the install banner, or use browser menu ¡÷ *Install app*
+* **iPhone/iPad (Safari):** Tap *Share* ¡÷ *Add to Home Screen*
+* **Desktop (Chrome/Edge):** Click the install icon in the address bar
+
 ### Offline Support
 
-The app is designed with Progressive Web App concepts in mind, allowing users to access core content even in limited network conditions.
+A service worker caches core app assets so the app remains usable in limited network conditions after the first visit.
 
 ### Clean and Responsive UI
 
@@ -46,11 +54,11 @@ The interface is built with Tailwind CSS to provide a modern, clean, and mobile-
 
 ## Tech Stack
 
-* **React 18** â€” Frontend framework
-* **Tailwind CSS** â€” Styling framework
-* **JavaScript** â€” Main programming language
-* **PWA Builder** â€” Packaging as a mobile installable app
-* **Netlify** â€” Deployment platform
+* **React 18** ¡X Frontend framework
+* **Tailwind CSS** ¡X Styling framework
+* **JavaScript** ¡X Main programming language
+* **Workbox** ¡X Service worker and offline caching
+* **Netlify** ¡X Deployment platform
 
 ---
 
@@ -58,15 +66,25 @@ The interface is built with Tailwind CSS to provide a modern, clean, and mobile-
 
 ```text
 src/
-â”œâ”€â”€ components/
-â”‚   â”œâ”€â”€ BodyPartGrid.js       # Body part selection grid
-â”‚   â”œâ”€â”€ ExerciseList.js       # Exercise list page
-â”‚   â””â”€â”€ ExerciseDetail.js     # Exercise detail page
-â”œâ”€â”€ data/
-â”‚   â””â”€â”€ exerciseData.js       # Exercise data
-â”œâ”€â”€ App.js                    # Main app entry and page navigation
-â”œâ”€â”€ index.js                  # React entry point
-â””â”€â”€ index.css                 # Global styles
+¢u¢w¢w components/
+¢x   ¢u¢w¢w BodyPartGrid.js
+¢x   ¢u¢w¢w ExerciseList.js
+¢x   ¢u¢w¢w ExerciseDetail.js
+¢x   ¢u¢w¢w AddBodyPartForm.js
+¢x   ¢u¢w¢w AddExerciseForm.js
+¢x   ¢|¢w¢w InstallPWA.js         # PWA install prompt banner
+¢u¢w¢w data/
+¢x   ¢|¢w¢w exerciseData.js
+¢u¢w¢w service-worker.js           # Workbox service worker (production)
+¢u¢w¢w serviceWorkerRegistration.js
+¢u¢w¢w App.js
+¢u¢w¢w index.js
+¢|¢w¢w index.css
+
+public/
+¢u¢w¢w manifest.json             # PWA manifest
+¢u¢w¢w logo192.png / logo512.png # App icons
+¢|¢w¢w _redirects                # Netlify SPA routing
 ```
 
 ---
@@ -85,11 +103,9 @@ npm install
 npm start
 ```
 
-Then open the app in your browser:
+Open `http://localhost:3000` in your browser.
 
-```text
-http://localhost:3000
-```
+> **Note:** PWA install and the service worker only activate in **production build** over HTTPS. They do not run in `npm start` dev mode.
 
 ---
 
@@ -105,40 +121,81 @@ http://localhost:3000
 
 ## Development and Deployment Workflow
 
-### 1. Build and Test Locally
+### Step 1: Build and Test Locally
 
 ```bash
 npm run build
-serve -s build
+npx serve -s build
 ```
 
-### 2. Commit Changes
+Open the URL shown (e.g. `http://localhost:3000`). For full PWA testing (install prompt, offline), deploy to Netlify first.
+
+### Step 2: Deploy to Netlify
+
+#### Option A ¡X Connect Git Repository (Recommended)
+
+1. Push your code to GitHub.
+2. Go to [Netlify](https://www.netlify.com/) and sign in.
+3. Click **Add new site** ¡÷ **Import an existing project**.
+4. Select your GitHub repository.
+5. Build settings (auto-detected from `netlify.toml`):
+   * **Build command:** `npm run build`
+   * **Publish directory:** `build`
+6. Click **Deploy site**.
+7. Wait 1¡V2 minutes. Netlify provides a URL like `https://your-app-name.netlify.app`.
+
+#### Option B ¡X Manual Deploy via CLI
+
+```bash
+npm install -g netlify-cli
+npm run build
+netlify deploy --prod --dir=build
+```
+
+### Step 3: Install on Mobile (PWA)
+
+After deployment, open the **HTTPS** Netlify URL on your phone.
+
+#### Android (Chrome)
+
+1. Open the deployed URL in Chrome.
+2. Tap the **Install App** banner at the bottom, **or**
+3. Tap the browser menu (?) ¡÷ **Install app** / **Add to Home screen**.
+4. Confirm installation. The app icon appears on your home screen.
+
+#### iPhone / iPad (Safari)
+
+1. Open the deployed URL in **Safari** (required).
+2. Tap the **Share** button (¡¼¡ô).
+3. Scroll down and tap **Add to Home Screen**.
+4. Tap **Add**. The app icon appears on your home screen.
+
+> iOS does not show a native install prompt. The app displays step-by-step instructions when opened in Safari.
+
+#### Desktop (Chrome / Edge)
+
+1. Open the deployed URL.
+2. Click the **install icon** in the address bar, or use menu ¡÷ **Install Fitness Training App**.
+
+### Step 4: Verify PWA Setup
+
+Use Chrome DevTools to confirm:
+
+1. Open the deployed site in Chrome.
+2. Press `F12` ¡÷ **Application** tab.
+3. Check **Manifest** ¡X icons and name should load correctly.
+4. Check **Service Workers** ¡X should show `service-worker.js` as activated.
+5. Run Lighthouse PWA audit for a full report.
+
+### Step 5: Commit and Auto-Deploy
 
 ```bash
 git add .
-git commit -m "Add new exercises and tips"
+git commit -m "Add PWA install support"
 git push
 ```
 
-### 3. Deploy
-
-This project is deployed using **Netlify**.
-
-After pushing to the repository, Netlify automatically builds and deploys the latest version of the app.
-Deployment usually takes about 1â€“2 minutes.
-
-### 4. Package as a Mobile App
-
-The deployed Netlify URL can be used with **PWA Builder** to package the app for mobile installation.
-
-General workflow:
-
-1. Deploy the app to Netlify.
-2. Copy the Netlify app URL.
-3. Paste the URL into PWA Builder.
-4. Generate the Android or iOS package.
-5. Open the generated package link on a mobile device.
-6. Install the app.
+Netlify automatically rebuilds and redeploys on every push.
 
 ---
 
@@ -148,9 +205,10 @@ General workflow:
 * [x] Body part selection page
 * [x] Exercise list page
 * [x] Exercise detail page
-* [x] Basic installation and startup flow
-* [x] Netlify deployment workflow
-* [x] PWA packaging workflow
+* [x] Custom body part and exercise support
+* [x] PWA install support (Add to Home Screen)
+* [x] Service worker offline caching
+* [x] Netlify deployment configuration
 * [ ] Add more body parts
 * [ ] Add more exercise images
 * [ ] Add more exercises
@@ -174,7 +232,6 @@ Planned improvements include:
 * Adding more visual examples
 * Improving offline support and cache behavior
 * Supporting multiple languages
-* Adding user-customized exercise notes
 * Adding workout planning or progress tracking features
 
 ---
