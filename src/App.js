@@ -4,7 +4,8 @@ import BodyPartGrid from './components/BodyPartGrid';
 import ExerciseList from './components/ExerciseList';
 import ExerciseDetail from './components/ExerciseDetail';
 import AddExerciseForm from './components/AddExerciseForm';
-import { exerciseData, addCustomExercise, getExercisesForBodyPart, deleteCustomExercise, initCustomExercises } from './data/exerciseData';
+import AddBodyPartForm from './components/AddBodyPartForm';
+import { addCustomExercise, getExercisesForBodyPart, deleteCustomExercise, initCustomExercises, getAllBodyParts, addCustomBodyPart, deleteCustomBodyPart, initCustomBodyParts } from './data/exerciseData';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -55,6 +56,34 @@ function App() {
     setCurrentPage('addExercise');
   };
 
+  const handleAddBodyPart = () => {
+    setCurrentPage('addBodyPart');
+  };
+
+  const handleSubmitBodyPart = async (bodyPartData) => {
+    await addCustomBodyPart(bodyPartData);
+    setRefreshKey(k => k + 1);
+    window.alert('Body part added successfully!');
+    setCurrentPage('home');
+  };
+
+  const handleCancelAddBodyPart = useCallback(() => {
+    setCurrentPage('home');
+  }, []);
+
+  const handleDeleteBodyPart = useCallback(async (bodyPartId) => {
+    try {
+      await deleteCustomBodyPart(bodyPartId);
+      if (selectedBodyPart?.id === bodyPartId) {
+        setSelectedBodyPart(null);
+        setCurrentPage('home');
+      }
+      setRefreshKey(k => k + 1);
+    } catch (err) {
+      console.error('Failed to delete body part', err);
+    }
+  }, [selectedBodyPart]);
+
   const handleSubmitExercise = async (exerciseData) => {
     if (!selectedBodyPart) {
       return;
@@ -78,6 +107,7 @@ function App() {
   useEffect(() => {
     const init = async () => {
       await initCustomExercises();
+      await initCustomBodyParts();
       try {
         const stored = await localforage.getItem('removedExerciseIds');
         if (Array.isArray(stored)) {
@@ -144,6 +174,8 @@ function App() {
         handleBackToList();
       } else if (currentPage === 'addExercise') {
         handleCancelAddExercise();
+      } else if (currentPage === 'addBodyPart') {
+        handleCancelAddBodyPart();
       } else if (currentPage === 'exerciseList') {
         // Return to home from exercise list
         handleBackToHome();
@@ -166,7 +198,7 @@ function App() {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [currentPage, selectedBodyPart, handleBackToList, handleBackToHome, handleCancelAddExercise]);
+  }, [currentPage, selectedBodyPart, handleBackToList, handleBackToHome, handleCancelAddExercise, handleCancelAddBodyPart]);
 
   // Update document title and history based on current page
   useEffect(() => {
@@ -181,6 +213,8 @@ function App() {
       ? `${selectedBodyPart?.name} Exercises` 
       : currentPage === 'addExercise'
       ? `Add Exercise - ${selectedBodyPart?.name}`
+      : currentPage === 'addBodyPart'
+      ? 'Add Body Part'
       : `${selectedExercise?.name} Tips`;
     
     // Update document title
@@ -214,8 +248,11 @@ function App() {
       case 'home':
         return (
           <BodyPartGrid 
-            bodyParts={exerciseData.bodyParts}
+            key={`body-part-grid-${refreshKey}`}
+            bodyParts={getAllBodyParts()}
             onBodyPartSelect={handleBodyPartSelect}
+            onAddBodyPart={handleAddBodyPart}
+            onDeleteBodyPart={handleDeleteBodyPart}
           />
         );
       case 'exerciseList':
@@ -250,10 +287,21 @@ function App() {
             onCancel={handleCancelAddExercise}
           />
         );
+      case 'addBodyPart':
+        return (
+          <AddBodyPartForm
+            key={`add-body-part-${refreshKey}`}
+            onSubmit={handleSubmitBodyPart}
+            onCancel={handleCancelAddBodyPart}
+          />
+        );
       default:
         return <BodyPartGrid 
-          bodyParts={exerciseData.bodyParts}
+          key={`body-part-grid-${refreshKey}`}
+          bodyParts={getAllBodyParts()}
           onBodyPartSelect={handleBodyPartSelect}
+          onAddBodyPart={handleAddBodyPart}
+          onDeleteBodyPart={handleDeleteBodyPart}
         />;
     }
   };

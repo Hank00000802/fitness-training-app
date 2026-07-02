@@ -1,9 +1,6 @@
 import React from 'react';
 
 const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExercise, onDelete }) => {
-  console.log('ExerciseList - bodyPart:', bodyPart);
-  console.log('ExerciseList - exercises:', exercises);
-  
   return (
     <div className="max-w-md mx-auto">
       <div className="flex items-center justify-between mb-8">
@@ -11,8 +8,8 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExer
           onClick={onBack}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1"></span>
-          返回部位列表
+          <span className="mr-1">⭠</span>
+          Back to Home
         </button>
         <h1 className="text-2xl font-bold text-white">
           Exercise List - {bodyPart.name}
@@ -50,9 +47,8 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExer
                   {exercise.description}
                 </p>
               </div>
-              <span className="text-blue-400">查看</span>
+              <span className="text-blue-400">View ��</span>
             </div>
-            {/* Always allow deletion when handler is provided */}
             {onDelete && (
               <button
                 onClick={(e) => {
@@ -86,4 +82,4 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExer
   );
 };
 
-export default ExerciseList; 
+export default ExerciseList;

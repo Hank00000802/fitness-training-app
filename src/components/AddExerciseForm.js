@@ -17,7 +17,7 @@ import React, { useState } from 'react';
 const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     name: '',
-    description: '簡單說明內容',
+    description: '',
     image: null,
     imagePreview: null,
     tips: ['']
@@ -105,8 +105,8 @@ const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
           onClick={onCancel}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1"></span>
-          返回部位列表
+          <span className="mr-1">��</span>
+          Back to List
         </button>
 
         <h1 className="text-xl font-bold text-white">
@@ -218,7 +218,7 @@ const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
                     onClick={() => removeTip(index)}
                     className="px-2 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                   >
-                    ???
+                    ?
                   </button>
                 )}
               </div>

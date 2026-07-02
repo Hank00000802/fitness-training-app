@@ -4,269 +4,269 @@ const exerciseStore = localforage.createInstance({ name: 'fitnessApp', storeName
 
 export const exerciseData = {
   bodyParts: [
-    { id: 'chest', name: '胸部', icon: '💪' },
-    { id: 'biceps', name: '二頭肌', icon: '💪' },
-    { id: 'triceps', name: '三頭肌', icon: '💪' },
-    { id: 'shoulders', name: '肩膀', icon: '🏋️' },
-    { id: 'back', name: '背部', icon: '🏋️' },
-    { id: 'abs', name: '腹肌', icon: '🏃' },
-    { id: 'legs', name: '腿部', icon: '🏃' },
-    { id: 'glutes', name: '臀部', icon: '🍑' }
+    { id: 'chest', name: 'Chest', icon: '🏋️‍♀️' },
+    { id: 'biceps', name: 'Biceps', icon: '💪' },
+    { id: 'triceps', name: 'Triceps', icon: '💪' },
+    { id: 'shoulders', name: 'Shoulders', icon: '💪' },
+    { id: 'back', name: 'Back', icon: '🏋️‍♀️' },
+    { id: 'abs', name: 'Abs', icon: '🏋️‍♀️' },
+    { id: 'legs', name: 'Legs', icon: '🦵' },
+    { id: 'glutes', name: 'Glutes', icon: '🏋️‍♀️' }
   ],
   exercises: {
     chest: [
       {
         id: 'pushup',
-        name: '伏地挺身',
-        description: '經典徒手訓練，強化胸大肌、三頭肌與核心穩定。',
+        name: 'Push-Up',
+        description: 'A bodyweight exercise that strengthens the chest, shoulders, and triceps while improving core stability.',
         image: '/images/exercises/pushup.png',
         tips: [
-          '身體保持一直線，胸部靠近地面再推起。',
-          '控制下放速度，避免完全放鬆失去張力。',
-          '窄距離偏重三頭肌，寬距離偏重胸大肌。',
-          '入門者可先做膝蓋版本再進階。'
+          'Keep your body in a straight line from head to heels.',
+          'Lower your chest slowly and push up with control.',
+          'Keep elbows at about a 45-degree angle to your torso.',
+          'Engage your core throughout the movement.'
         ]
       },
       {
         id: 'dumbbell_bench_press',
-        name: '啞鈴臥推',
-        description: '啞鈴臥推提供更大活動幅度，訓練胸大肌與穩定肌群。',
+        name: 'Dumbbell Bench Press',
+        description: 'A pressing movement using dumbbells to build chest strength and improve muscle balance.',
         image: '/images/exercises/dumbbell_bench_press.png',
         tips: [
-          '肩胛骨收穩，啞鈴至胸旁再推起。',
-          '6-12 次為一組可兼顧力量與肌肥大。',
-          '雙手力量不均時可單臂交替。',
-          '避免腰背過度拱起，核心收緊。'
+          'Keep your shoulder blades retracted and pressed into the bench.',
+          'Use 6-12 reps per set for hypertrophy.',
+          'Lower the dumbbells with control to chest level.',
+          'Avoid locking out your elbows at the top.'
         ]
       },
       {
         id: 'cable_crossover',
-        name: '滑輪夾胸',
-        description: '滑輪胸前夾收，強調胸大肌收縮與線條。',
+        name: 'Cable Crossover',
+        description: 'A cable exercise that emphasizes chest contraction and inner chest development.',
         image: '/images/exercises/cable_crossover.png',
         tips: [
-          '微彎手肘，從兩側往前合攏。',
-          '選擇能感受張力的重量，避免甩動。',
-          '動作末端稍作等長收縮。',
-          '控制回放，不要讓重量彈回。'
+          'Start with a slight forward lean and arms wide.',
+          'Bring your hands together in a controlled arc.',
+          'Squeeze your chest at the peak of the movement.',
+          'Keep a slight bend in your elbows throughout.'
         ]
       }
     ],
     biceps: [
       {
         id: 'bicep_curl',
-        name: '二頭肌彎舉',
-        description: '基礎二頭肌訓練，增強手臂尺寸與力量。',
+        name: 'Bicep Curl',
+        description: 'An isolation exercise targeting the biceps for arm size and strength.',
         image: '/images/exercises/bicep_curl.png',
         tips: [
-          '保持上臂穩定，避免身體晃動借力。',
-          '手腕維持中立，專注二頭肌發力。',
-          '控制下放速度增加張力時間。',
-          '可交替或同時雙手進行。'
+          'Keep your elbows close to your sides.',
+          'Curl with control and avoid swinging.',
+          'Squeeze at the top of the movement.',
+          'Lower the weight slowly on the eccentric.'
         ]
       },
       {
         id: 'hammer_curl',
-        name: '槌式彎舉',
-        description: '中立握法彎舉，強化前臂與二頭肌長頭，提升握力。',
+        name: 'Hammer Curl',
+        description: 'A neutral-grip curl that targets the biceps and brachialis for thicker arms.',
         image: '/images/exercises/hammer_curl.png',
         tips: [
-          '手臂貼身，上臂不動。',
-          '頂點稍停，感受前臂與二頭肌收縮。',
-          '可做交替或同時雙手。',
-          '重量以可控為主，避免聳肩。'
+          'Keep your wrists neutral throughout.',
+          'Avoid using momentum to lift the weight.',
+          'Focus on a full range of motion.',
+          'Control the descent of each rep.'
         ]
       },
       {
         id: 'rope_cable_curl',
-        name: '繩索彎舉',
-        description: '繩索提供恆定拉力，增加肌肉收縮感受。',
+        name: 'Rope Cable Curl',
+        description: 'A cable curl using a rope attachment for constant tension on the biceps.',
         image: '/images/exercises/rope_cable_curl.png',
         tips: [
-          '從底端拉起，專注二頭肌頂峰收縮。',
-          '肘部固定於身側，避免前臂擺動。',
-          '可調握把寬度改變刺激。',
-          '重量以完整收放為原則。'
+          'Stand close to the cable and keep elbows fixed.',
+          'Spread the rope apart at the top for peak contraction.',
+          'Adjust cable height for optimal arm angle.',
+          'Use a controlled tempo throughout.'
         ]
       }
     ],
     triceps: [
       {
         id: 'tricep_dip',
-        name: '三頭肌撐體',
-        description: '自體重量撐體，訓練三頭肌與肩帶穩定。',
+        name: 'Tricep Dip',
+        description: 'A compound bodyweight movement that builds tricep strength and pressing power.',
         image: '/images/exercises/tricep_dip.png',
         tips: [
-          '手肘朝後收，下降至上臂平行地面。',
-          '核心收緊避免身體前傾過多。',
-          '無法完成全程可用助力或彈力帶。',
-          '控制節奏避免衝擊肩關節。'
+          'Keep your torso upright to emphasize triceps.',
+          'Lower until elbows reach about 90 degrees.',
+          'Avoid flaring elbows too wide.',
+          'Use assistance if needed to maintain form.'
         ]
       },
       {
         id: 'overhead_tricep_extension',
-        name: '頭上臂屈伸',
-        description: '啞鈴或繩索頭上屈伸，強化三頭肌長頭。',
+        name: 'Overhead Tricep Extension',
+        description: 'An overhead extension that stretches and strengthens the long head of the triceps.',
         image: '/images/exercises/overhead_tricep_extension.png',
         tips: [
-          '手肘收緊，保持肩膀穩定。',
-          '下放至可感受拉伸的位置再推起。',
-          '避免腰背過度反折，核心收緊。',
-          '重量以可控為主，確保全程張力。'
+          'Keep your upper arms close to your head.',
+          'Extend fully without locking elbows harshly.',
+          'Control the weight on the way down.',
+          'Use a weight you can control through full ROM.'
         ]
       },
       {
         id: 'rope_triceps_pushdown',
-        name: '繩索下拉',
-        description: '繩索下拉，針對三頭肌外側與內側頭。',
+        name: 'Rope Triceps Pushdown',
+        description: 'A cable pushdown that isolates the triceps with constant tension.',
         image: '/images/exercises/rope_triceps_pushdown.png',
         tips: [
-          '手肘貼身固定，前臂下壓至完全伸直。',
-          '動作底端可微外展繩索增加收縮。',
-          '避免聳肩或身體前傾借力。',
-          '重量以能維持穩定軌跡為主。'
+          'Keep elbows pinned to your sides.',
+          'Spread the rope at the bottom for full contraction.',
+          'Avoid leaning too far forward.',
+          'Use a slow, controlled eccentric.'
         ]
       }
     ],
     shoulders: [
       {
         id: 'shoulder_press',
-        name: '肩推',
-        description: '肩部推舉，鍛鍊前三角與整體肩帶穩定。',
+        name: 'Shoulder Press',
+        description: 'An overhead pressing movement that builds shoulder strength and stability.',
         image: '/images/exercises/shoulder_press.png',
         tips: [
-          '起始時手肘略低於肩。',
-          '推起時不鎖死手肘，維持張力。',
-          '核心收緊避免腰椎過度伸展。',
-          '可坐姿或站姿依需求選擇。'
+          'Brace your core before each rep.',
+          'Press straight up without excessive arching.',
+          'Lower the weight to chin or ear level.',
+          'Keep wrists stacked over elbows.'
         ]
       },
       {
         id: 'cable_lateral_raise',
-        name: '繩索側平舉',
-        description: '繩索側平舉持續張力，專注肩中束。',
+        name: 'Cable Lateral Raise',
+        description: 'A lateral raise using cables for constant tension on the side delts.',
         image: '/images/exercises/cable_lateral_raise.png',
         tips: [
-          '手肘微彎，側向抬至肩高。',
-          '身體保持穩定，避免晃動借力。',
-          '重量輕中為主，尋找肩部灼熱感。',
-          '下降時控制速度。'
+          'Lead with your elbows, not your hands.',
+          'Raise to shoulder height with control.',
+          'Avoid shrugging your traps excessively.',
+          'Use a light weight for proper form.'
         ]
       },
       {
         id: 'dumbbell_front_raise',
-        name: '啞鈴前平舉',
-        description: '前束訓練，強化肩前側與穩定。',
+        name: 'Dumbbell Front Raise',
+        description: 'An isolation exercise targeting the front deltoids.',
         image: '/images/exercises/dumbbell_front_raise.png',
         tips: [
-          '啞鈴抬至肩高或略高。',
-          '掌心向下或相對皆可。',
-          '避免聳肩，保持核心緊繃。',
-          '可單臂或交替進行。'
+          'Raise one or both arms to shoulder height.',
+          'Keep a slight bend in your elbows.',
+          'Avoid swinging the dumbbells.',
+          'Control the lowering phase.'
         ]
       }
     ],
     back: [
       {
         id: 'pull_up',
-        name: '引體向上',
-        description: '徒手拉力訓練，鍛鍊背闊肌與上背。',
+        name: 'Pull-Up',
+        description: 'A bodyweight pulling exercise that builds back width and grip strength.',
         image: '/images/exercises/pull_up.png',
         tips: [
-          '肩胛下沉後再發力上拉。',
-          '胸口朝橫桿，避免聳肩。',
-          '全程控制，不要猛衝借力。',
-          '無法完成可用彈力帶輔助。'
+          'Start from a dead hang with shoulders engaged.',
+          'Pull your chest toward the bar.',
+          'Avoid kipping unless intentionally training it.',
+          'Lower with full control.'
         ]
       },
       {
         id: 'face_pull',
-        name: '臉拉',
-        description: '繩索臉拉，強化後束與肩袖穩定。',
+        name: 'Face Pull',
+        description: 'A cable exercise for rear delts and upper back health.',
         image: '/images/exercises/face_pull.png',
         tips: [
-          '繩索拉向眉眼位置，手肘外展。',
-          '專注肩胛後收與下壓。',
-          '保持頸部放鬆避免聳肩。',
-          '適合中輕重量高次數。'
+          'Set the cable at upper chest height.',
+          'Pull toward your face with elbows high.',
+          'Squeeze shoulder blades together.',
+          'Use a light to moderate weight.'
         ]
       },
       {
         id: 'cable_pulldown',
-        name: '滑輪下拉',
-        description: '滑輪下拉，針對背闊肌與上背厚度。',
+        name: 'Cable Pulldown',
+        description: 'A lat pulldown variation for back width and pulling strength.',
         image: '/images/exercises/cable_pulldown.png',
         tips: [
-          '起始時肩胛下沉，胸口挺起。',
-          '拉至鎖骨或胸上緣位置。',
-          '避免身體後仰過多借力。',
-          '控制回放，保持張力。'
+          'Lean back slightly and pull to upper chest.',
+          'Drive elbows down and back.',
+          'Avoid pulling with arms only.',
+          'Control the weight on the return.'
         ]
       }
     ],
     abs: [
       {
         id: 'crunch',
-        name: '仰臥捲腹',
-        description: '基礎腹肌收縮訓練，著重上腹。',
+        name: 'Crunch',
+        description: 'A core exercise focusing on abdominal contraction.',
         image: '/images/exercises/crunch.png',
         tips: [
-          '下背貼地，慢慢捲起上身。',
-          '視線朝天花板，避免拉扯頸部。',
-          '動作幅度不需過大，專注收縮。',
-          '可調整手位置改變難度。'
+          'Keep lower back pressed to the floor.',
+          'Curl your rib cage toward your pelvis.',
+          'Exhale as you crunch up.',
+          'Avoid pulling on your neck.'
         ]
       },
       {
         id: 'pallof_press',
-        name: 'Pallof Press 抗旋轉推舉',
-        description: '利用滑輪或彈力帶抗旋轉，強化核心穩定。',
+        name: 'Pallof Press',
+        description: 'An anti-rotation core exercise that builds stability.',
         image: '/images/exercises/pallof_press.png',
         tips: [
-          '雙手於胸前推直，抗拒側向拉力。',
-          '保持骨盆與胸口朝前。',
-          '膝微彎，核心收緊。',
-          '可調整站距或重量增加挑戰。'
+          'Stand perpendicular to the cable.',
+          'Press straight out and resist rotation.',
+          'Keep hips and shoulders square.',
+          'Hold briefly at full extension.'
         ]
       },
       {
         id: 'dumbbell_russian_twist',
-        name: '俄式扭轉',
-        description: '坐姿扭轉，訓練腹外斜與核心穩定。',
+        name: 'Russian Twist',
+        description: 'A rotational core exercise targeting the obliques.',
         image: '/images/exercises/dumbbell_russian_twist.png',
         tips: [
-          '上身微後傾，背部保持中立。',
-          '左右扭轉時目視器材或手。',
-          '動作平順，避免甩動。',
-          '腳可抬起增加難度。'
+          'Lean back slightly with a straight spine.',
+          'Rotate from the torso, not just the arms.',
+          'Keep feet elevated for more difficulty.',
+          'Move with control, not speed.'
         ]
       }
     ],
     legs: [
       {
         id: 'squat',
-        name: '深蹲',
-        description: '下肢基礎訓練，鍛鍊股四頭、臀部與核心。',
+        name: 'Squat',
+        description: 'A fundamental lower-body exercise for quads, glutes, and overall leg strength.',
         image: '/images/exercises/squat.png',
         tips: [
-          '腳尖略外開，膝蓋隨腳尖方向。',
-          '下蹲時臀部向後坐，背部維持中立。',
-          '站起時用腳跟發力，避免膝內夾。',
-          '可依需求使用槓鈴或徒手。'
+          'Keep chest up and core braced.',
+          'Push knees out in line with toes.',
+          'Descend until thighs are parallel or below.',
+          'Drive through your heels to stand.'
         ]
       }
     ],
     glutes: [
       {
         id: 'glute_bridge',
-        name: '臀橋',
-        description: '仰臥抬臀動作，針對臀大肌啟動與強化。',
+        name: 'Glute Bridge',
+        description: 'A hip thrust variation that activates and strengthens the glutes.',
         image: '/images/exercises/glute_bridge.png',
         tips: [
-          '膝蓋約 90 度，腳跟踩實。',
-          '抬起臀部至膝肩成一直線。',
-          '頂點稍停並收縮臀部。',
-          '避免下背過度拱起。'
+          'Feet flat, knees bent at about 90 degrees.',
+          'Squeeze glutes hard at the top.',
+          'Avoid over-arching your lower back.',
+          'Lower with control between reps.'
         ]
       }
     ]
@@ -322,4 +322,50 @@ export const deleteCustomExercise = async (bodyPartId, exerciseId) => {
     delete dynamicExercises[bodyPartId];
   }
   await saveCustomExercises();
+};
+
+// In-memory store for custom body parts loaded from localforage
+let customBodyParts = [];
+
+export const initCustomBodyParts = async () => {
+  try {
+    const stored = await exerciseStore.getItem('customBodyParts');
+    customBodyParts = Array.isArray(stored) ? stored : [];
+  } catch (err) {
+    console.error('Failed to load custom body parts:', err);
+    customBodyParts = [];
+  }
+};
+
+const saveCustomBodyParts = async () => {
+  try {
+    await exerciseStore.setItem('customBodyParts', customBodyParts);
+  } catch (err) {
+    console.error('Failed to save custom body parts:', err);
+  }
+};
+
+export const getAllBodyParts = () => {
+  return [...exerciseData.bodyParts, ...customBodyParts];
+};
+
+export const addCustomBodyPart = async (bodyPartData) => {
+  const newBodyPart = {
+    id: `custom_body_${Date.now()}`,
+    name: bodyPartData.name,
+    icon: bodyPartData.icon || '?',
+    isCustom: true
+  };
+  customBodyParts = [...customBodyParts, newBodyPart];
+  await saveCustomBodyParts();
+  return newBodyPart;
+};
+
+export const deleteCustomBodyPart = async (bodyPartId) => {
+  customBodyParts = customBodyParts.filter(bp => bp.id !== bodyPartId);
+  await saveCustomBodyParts();
+  if (dynamicExercises[bodyPartId]) {
+    delete dynamicExercises[bodyPartId];
+    await saveCustomExercises();
+  }
 };
