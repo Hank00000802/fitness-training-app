@@ -105,7 +105,7 @@ const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
           onClick={onCancel}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1">¡ö</span>
+          <span className="mr-1"></span>
           Back to List
         </button>
 

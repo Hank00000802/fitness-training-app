@@ -8,7 +8,7 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExer
           onClick={onBack}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1">⭠</span>
+          <span className="mr-1"></span>
           Back to Home
         </button>
         <h1 className="text-2xl font-bold text-white">
@@ -47,7 +47,7 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExer
                   {exercise.description}
                 </p>
               </div>
-              <span className="text-blue-400">View ��</span>
+              <span className="text-blue-400">View</span>
             </div>
             {onDelete && (
               <button

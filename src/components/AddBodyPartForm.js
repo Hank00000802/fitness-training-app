@@ -39,7 +39,7 @@ const AddBodyPartForm = ({ onSubmit, onCancel }) => {
           onClick={onCancel}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1">⭠</span>
+          <span className="mr-1"></span>
           Back to Home
         </button>
 

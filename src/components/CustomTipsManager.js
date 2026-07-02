@@ -72,7 +72,7 @@ const CustomTipsManager = ({ exerciseData, onBack }) => {
           onClick={onBack}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1">¡ö</span>
+          <span className="mr-1"></span>
           Back
         </button>
         <h1 className="text-xl font-bold text-white">
