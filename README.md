@@ -1,4 +1,6 @@
 # Fitness Training App
+## Link:
+https://fitness-training-app.netlify.app/
 
 A mobile-friendly fitness training application built with **React** and **Tailwind CSS**.
 The app helps users quickly browse exercises by body part, view exercise details, and access training notes in a simple and clean interface.
@@ -36,10 +38,10 @@ Each exercise includes:
 
 ### PWA Install (Add to Home Screen)
 
-The app is a **Progressive Web App (PWA)**. After deployment over HTTPS, users can install it directly to their phone home screen from the browser ¡X no app store required.
+The app is a **Progressive Web App (PWA)**. After deployment over HTTPS, users can install it directly to their phone home screen from the browser Â¡X no app store required.
 
-* **Android (Chrome):** Tap the install banner, or use browser menu ¡÷ *Install app*
-* **iPhone/iPad (Safari):** Tap *Share* ¡÷ *Add to Home Screen*
+* **Android (Chrome):** Tap the install banner, or use browser menu Â¡Ã· *Install app*
+* **iPhone/iPad (Safari):** Tap *Share* Â¡Ã· *Add to Home Screen*
 * **Desktop (Chrome/Edge):** Click the install icon in the address bar
 
 ### Offline Support
@@ -54,11 +56,11 @@ The interface is built with Tailwind CSS to provide a modern, clean, and mobile-
 
 ## Tech Stack
 
-* **React 18** ¡X Frontend framework
-* **Tailwind CSS** ¡X Styling framework
-* **JavaScript** ¡X Main programming language
-* **Workbox** ¡X Service worker and offline caching
-* **Netlify** ¡X Deployment platform
+* **React 18** Â¡X Frontend framework
+* **Tailwind CSS** Â¡X Styling framework
+* **JavaScript** Â¡X Main programming language
+* **Workbox** Â¡X Service worker and offline caching
+* **Netlify** Â¡X Deployment platform
 
 ---
 
@@ -66,25 +68,25 @@ The interface is built with Tailwind CSS to provide a modern, clean, and mobile-
 
 ```text
 src/
-¢u¢w¢w components/
-¢x   ¢u¢w¢w BodyPartGrid.js
-¢x   ¢u¢w¢w ExerciseList.js
-¢x   ¢u¢w¢w ExerciseDetail.js
-¢x   ¢u¢w¢w AddBodyPartForm.js
-¢x   ¢u¢w¢w AddExerciseForm.js
-¢x   ¢|¢w¢w InstallPWA.js         # PWA install prompt banner
-¢u¢w¢w data/
-¢x   ¢|¢w¢w exerciseData.js
-¢u¢w¢w service-worker.js           # Workbox service worker (production)
-¢u¢w¢w serviceWorkerRegistration.js
-¢u¢w¢w App.js
-¢u¢w¢w index.js
-¢|¢w¢w index.css
+Â¢uÂ¢wÂ¢w components/
+Â¢x   Â¢uÂ¢wÂ¢w BodyPartGrid.js
+Â¢x   Â¢uÂ¢wÂ¢w ExerciseList.js
+Â¢x   Â¢uÂ¢wÂ¢w ExerciseDetail.js
+Â¢x   Â¢uÂ¢wÂ¢w AddBodyPartForm.js
+Â¢x   Â¢uÂ¢wÂ¢w AddExerciseForm.js
+Â¢x   Â¢|Â¢wÂ¢w InstallPWA.js         # PWA install prompt banner
+Â¢uÂ¢wÂ¢w data/
+Â¢x   Â¢|Â¢wÂ¢w exerciseData.js
+Â¢uÂ¢wÂ¢w service-worker.js           # Workbox service worker (production)
+Â¢uÂ¢wÂ¢w serviceWorkerRegistration.js
+Â¢uÂ¢wÂ¢w App.js
+Â¢uÂ¢wÂ¢w index.js
+Â¢|Â¢wÂ¢w index.css
 
 public/
-¢u¢w¢w manifest.json             # PWA manifest
-¢u¢w¢w logo192.png / logo512.png # App icons
-¢|¢w¢w _redirects                # Netlify SPA routing
+Â¢uÂ¢wÂ¢w manifest.json             # PWA manifest
+Â¢uÂ¢wÂ¢w logo192.png / logo512.png # App icons
+Â¢|Â¢wÂ¢w _redirects                # Netlify SPA routing
 ```
 
 ---
@@ -132,19 +134,19 @@ Open the URL shown (e.g. `http://localhost:3000`). For full PWA testing (install
 
 ### Step 2: Deploy to Netlify
 
-#### Option A ¡X Connect Git Repository (Recommended)
+#### Option A Â¡X Connect Git Repository (Recommended)
 
 1. Push your code to GitHub.
 2. Go to [Netlify](https://www.netlify.com/) and sign in.
-3. Click **Add new site** ¡÷ **Import an existing project**.
+3. Click **Add new site** Â¡Ã· **Import an existing project**.
 4. Select your GitHub repository.
 5. Build settings (auto-detected from `netlify.toml`):
    * **Build command:** `npm run build`
    * **Publish directory:** `build`
 6. Click **Deploy site**.
-7. Wait 1¡V2 minutes. Netlify provides a URL like `https://your-app-name.netlify.app`.
+7. Wait 1Â¡V2 minutes. Netlify provides a URL like `https://your-app-name.netlify.app`.
 
-#### Option B ¡X Manual Deploy via CLI
+#### Option B Â¡X Manual Deploy via CLI
 
 ```bash
 npm install -g netlify-cli
@@ -160,13 +162,13 @@ After deployment, open the **HTTPS** Netlify URL on your phone.
 
 1. Open the deployed URL in Chrome.
 2. Tap the **Install App** banner at the bottom, **or**
-3. Tap the browser menu (?) ¡÷ **Install app** / **Add to Home screen**.
+3. Tap the browser menu (?) Â¡Ã· **Install app** / **Add to Home screen**.
 4. Confirm installation. The app icon appears on your home screen.
 
 #### iPhone / iPad (Safari)
 
 1. Open the deployed URL in **Safari** (required).
-2. Tap the **Share** button (¡¼¡ô).
+2. Tap the **Share** button (Â¡Â¼Â¡Ã´).
 3. Scroll down and tap **Add to Home Screen**.
 4. Tap **Add**. The app icon appears on your home screen.
 
@@ -175,16 +177,16 @@ After deployment, open the **HTTPS** Netlify URL on your phone.
 #### Desktop (Chrome / Edge)
 
 1. Open the deployed URL.
-2. Click the **install icon** in the address bar, or use menu ¡÷ **Install Fitness Training App**.
+2. Click the **install icon** in the address bar, or use menu Â¡Ã· **Install Fitness Training App**.
 
 ### Step 4: Verify PWA Setup
 
 Use Chrome DevTools to confirm:
 
 1. Open the deployed site in Chrome.
-2. Press `F12` ¡÷ **Application** tab.
-3. Check **Manifest** ¡X icons and name should load correctly.
-4. Check **Service Workers** ¡X should show `service-worker.js` as activated.
+2. Press `F12` Â¡Ã· **Application** tab.
+3. Check **Manifest** Â¡X icons and name should load correctly.
+4. Check **Service Workers** Â¡X should show `service-worker.js` as activated.
 5. Run Lighthouse PWA audit for a full report.
 
 ### Step 5: Commit and Auto-Deploy
