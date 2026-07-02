@@ -1,92 +1,184 @@
-# °·¨­°V½m APP
+# Fitness Training App
 
-³o¬O¤@­Ó¨Ï¥Î React ©M Tailwind CSS ¥´³yªº°·¨­°V½mÀ³¥Îµ{¦¡¡C
+A mobile-friendly fitness training application built with **React** and **Tailwind CSS**.
+The app helps users quickly browse exercises by body part, view exercise details, and access training notes in a simple and clean interface.
 
-## ¥D­n¥\¯à
+---
 
-- **¨­Åé³¡¦ì¿ï¾Ü**¡G»´ÃP¬D¿ï·Q°V½mªº¨­Åé³¡¦ì
-- **°Ê§@¦Cªí**¡GÂsÄý¸Ó³¡¦ì©Ò¦³¥i°µªº°V½m°Ê§@
-- **°Ê§@¸Ô±¡**¡G¬d¬Ý°Ê§@¦WºÙ¡B´y­z¡B¹Ï¤ù»Pª`·N¨Æ¶µ
-- **Â÷½u¤ä´©**¡G´£¨ÑÂ÷½u¤]¯àÂsÄýªºÅéÅç
-- **Â²¼ä¬üÆ[ UI**¡G¨Ï¥Î Tailwind CSS ¥´³y²{¥N­·®æ
+## Overview
 
-## §Þ³N¬[ºc
+This project was created to provide a lightweight and easy-to-use fitness reference app.
+Instead of searching through complex fitness apps or scattered online resources, users can select a target body part and quickly find relevant exercises, descriptions, images, and training tips.
 
-- **React 18**¡G«eºÝ®Ø¬[
-- **Tailwind CSS**¡G¼Ë¦¡®Ø¬[
-- **JavaScript**¡Gµ{¦¡»y¨¥
+The app is designed with a simple navigation flow, making it suitable for quick use during workouts.
 
-## ±M®×µ²ºc
+---
 
-```
+## Features
+
+### Body Part Selection
+
+Users can select the body part they want to train from the home screen.
+
+### Exercise List
+
+After selecting a body part, users can browse a list of available exercises for that training area.
+
+### Exercise Detail Page
+
+Each exercise includes:
+
+* Exercise name
+* Description
+* Image
+* Training notes
+* Important tips or precautions
+
+### Offline Support
+
+The app is designed with Progressive Web App concepts in mind, allowing users to access core content even in limited network conditions.
+
+### Clean and Responsive UI
+
+The interface is built with Tailwind CSS to provide a modern, clean, and mobile-friendly user experience.
+
+---
+
+## Tech Stack
+
+* **React 18** â€” Frontend framework
+* **Tailwind CSS** â€” Styling framework
+* **JavaScript** â€” Main programming language
+* **PWA Builder** â€” Packaging as a mobile installable app
+* **Netlify** â€” Deployment platform
+
+---
+
+## Project Structure
+
+```text
 src/
-¢u¢w¢w components/          # React ¤¸¥ó
-¢x   ¢u¢w¢w BodyPartGrid.js    # ¨­Åé³¡¦ì¿ï¾Üºô®æ
-¢x   ¢u¢w¢w ExerciseList.js    # °Ê§@¦Cªí
-¢x   ¢u¢w¢w ExerciseDetail.js  # °Ê§@¸Ô±¡
-¢u¢w¢w data/               # ¸ê®ÆÀÉ
-¢x   ¢|¢w¢w exerciseData.js    # °Ê§@¸ê®Æ
-¢u¢w¢w App.js              # ¥DÀ³¥Îµ{¦¡¤J¤f»P­¶­±¤Á´«
-¢u¢w¢w index.js            # React ¤J¤f
-¢|¢w¢w index.css           # ¥þ°ì¼Ë¦¡
+â”œâ”€â”€ components/
+â”‚   â”œâ”€â”€ BodyPartGrid.js       # Body part selection grid
+â”‚   â”œâ”€â”€ ExerciseList.js       # Exercise list page
+â”‚   â””â”€â”€ ExerciseDetail.js     # Exercise detail page
+â”œâ”€â”€ data/
+â”‚   â””â”€â”€ exerciseData.js       # Exercise data
+â”œâ”€â”€ App.js                    # Main app entry and page navigation
+â”œâ”€â”€ index.js                  # React entry point
+â””â”€â”€ index.css                 # Global styles
 ```
 
-## ¦w¸Ë»P±Ò°Ê
+---
 
-1. ¦w¸Ë¨Ì¿à®M¥ó¡G
+## Getting Started
+
+### 1. Install Dependencies
+
 ```bash
 npm install
 ```
 
-2. ±Ò°Ê¶}µo¦øªA¾¹¡G
+### 2. Start the Development Server
+
 ```bash
 npm start
 ```
 
-3. ÂsÄý¾¹¶}±Ò `http://localhost:3000`
+Then open the app in your browser:
 
-## ¨Ï¥Î¤è¦¡
+```text
+http://localhost:3000
+```
 
-1. **¿ï¾Ü³¡¦ì**¡G¦b­º­¶ÂI¿ï·Q°V½mªº¨­Åé³¡¦ì
-2. **ÂsÄý°Ê§@**¡G¦b°Ê§@¦CªíÂI¿ï·Q¬d¬Ýªº°Ê§@
-3. **¬d¬Ý¸Ô±¡**¡G¬d¬Ý°Ê§@¦WºÙ¡B¹Ï¤ù¡B´y­z»Pª`·N¨Æ¶µ
-4. **ªð¦^**¡G¨Ï¥Îªð¦^«ö¶s¦^¨ì«e¤@­¶
+---
 
-## ¶}µo¶i«×
+## Usage
 
-- [x] ªìª© UI ¬[ºc
-- [x] °ò¥»¨­Åé³¡¦ì»P°Ê§@¦Cªí
-- [x] °Ê§@¸Ô±¡­¶
-- [x] ¦w¸Ë»P±Ò°Ê¬yµ{
-- [ ] ·s¼W§ó¦h³¡¦ì
-- [ ] ¹Ï¤ù¸ê·½¸É»ô
-- [ ] ·s¼W§ó¦h°Ê§@
-- [ ] ¼W±jÂ÷½u»P§Ö¨ú
-- [ ] ·s¼W¦h»y¨t
+1. Select a body part on the home screen.
+2. Browse the exercise list for that body part.
+3. Click an exercise to view its details.
+4. Read the description, image, and training notes.
+5. Use the back button to return to the previous page.
 
-## ±ÂÅv
+---
 
-MIT License
+## Development and Deployment Workflow
 
-## ¶}µo»P´£¥æ¬yµ{
+### 1. Build and Test Locally
 
-¨BÆJ 1¡G¶}µo´ú¸Õ
+```bash
 npm run build
 serve -s build
+```
 
-¨BÆJ 2¡G´£¥æµ{¦¡½X
+### 2. Commit Changes
+
 ```bash
 git add .
 git commit -m "Add new exercises and tips"
 git push
 ```
 
-¨BÆJ 3¡G³¡¸p
-- Netlify ¦Û°Ê¤Æ³¡¸p
-- ¬ù»Ý 1-2 ¤ÀÄÁ
-- ½T»{³¡¸p­¶­±¥¿±`
+### 3. Deploy
 
-¨BÆJ 4¡G¥´¥]
-- PWAbuilder±N...netlify.com©ñ¤J¥´¥]
-- ¥´¥]¦¨¥\«á¡A½Æ»sPWAªº¥´¥]¦¨¥\ºô§}¨ì¤â¾÷¤W
-- ¦w¸ËAndroid©ÎIOS¥]§Y¥i
+This project is deployed using **Netlify**.
+
+After pushing to the repository, Netlify automatically builds and deploys the latest version of the app.
+Deployment usually takes about 1â€“2 minutes.
+
+### 4. Package as a Mobile App
+
+The deployed Netlify URL can be used with **PWA Builder** to package the app for mobile installation.
+
+General workflow:
+
+1. Deploy the app to Netlify.
+2. Copy the Netlify app URL.
+3. Paste the URL into PWA Builder.
+4. Generate the Android or iOS package.
+5. Open the generated package link on a mobile device.
+6. Install the app.
+
+---
+
+## Current Progress
+
+* [x] Initial UI structure
+* [x] Body part selection page
+* [x] Exercise list page
+* [x] Exercise detail page
+* [x] Basic installation and startup flow
+* [x] Netlify deployment workflow
+* [x] PWA packaging workflow
+* [ ] Add more body parts
+* [ ] Add more exercise images
+* [ ] Add more exercises
+* [ ] Improve offline caching
+* [ ] Add multilingual support
+
+---
+
+## Motivation
+
+This project was built as a practical fitness information tool and a frontend development practice project.
+It focuses on simplifying the process of finding suitable exercises and checking important training notes, especially for users who want a fast and straightforward workout reference.
+
+---
+
+## Future Improvements
+
+Planned improvements include:
+
+* Expanding the exercise database
+* Adding more visual examples
+* Improving offline support and cache behavior
+* Supporting multiple languages
+* Adding user-customized exercise notes
+* Adding workout planning or progress tracking features
+
+---
+
+## License
+
+This project is licensed under the MIT License.
