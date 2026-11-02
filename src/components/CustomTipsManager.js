@@ -72,7 +72,7 @@ const CustomTipsManager = ({ exerciseData, onBack }) => {
           onClick={onBack}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1"></span>
+          <span className="mr-1">←</span>
           Back
         </button>
         <h1 className="text-xl font-bold text-white">
@@ -83,7 +83,7 @@ const CustomTipsManager = ({ exerciseData, onBack }) => {
 
       {allCustomTips.length === 0 ? (
         <div className="text-center py-12">
-          <div className="text-6xl mb-4">?</div>
+          <div className="text-6xl mb-4">📝</div>
           <h2 className="text-xl font-semibold text-white mb-2">
             No custom tips yet
           </h2>

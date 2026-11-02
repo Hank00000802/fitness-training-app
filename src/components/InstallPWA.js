@@ -74,7 +74,7 @@ const InstallPWA = () => {
       <div className="fixed bottom-4 left-4 right-4 z-50 max-w-md mx-auto">
         <div className="bg-gray-900 border border-blue-500 border-opacity-40 rounded-xl p-4 shadow-2xl">
           <div className="flex items-start gap-3">
-            <div className="text-2xl flex-shrink-0">?</div>
+            <div className="text-2xl flex-shrink-0">📱</div>
             <div className="flex-1 min-w-0">
               <h3 className="text-white font-semibold text-sm mb-1">
                 Install Fitness Training App

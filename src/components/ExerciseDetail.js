@@ -1,6 +1,36 @@
 import React, { useState, useEffect } from 'react';
+import { DEFAULT_EXERCISE_IMAGE } from '../data/exerciseData';
 
-const ExerciseDetail = ({ exercise, onBack, onDelete }) => {
+// Custom tips live in localStorage, one entry per exercise.
+const customTipsKey = (exerciseId) => `customTips_${exerciseId}`;
+
+const readCustomTips = (exerciseId) => {
+  const saved = localStorage.getItem(customTipsKey(exerciseId));
+  if (!saved) return [];
+  try {
+    const parsedTips = JSON.parse(saved);
+    return Array.isArray(parsedTips) ? parsedTips : [];
+  } catch (e) {
+    // Oldest format: plain text separated by blank lines
+    return saved.split('\n\n').filter(tip => tip.trim());
+  }
+};
+
+const writeCustomTips = (exerciseId, tips) => {
+  if (tips.length) {
+    localStorage.setItem(customTipsKey(exerciseId), JSON.stringify(tips));
+  } else {
+    localStorage.removeItem(customTipsKey(exerciseId));
+  }
+};
+
+// Lets an open detail page reload its tips when an Undo changes them from outside.
+const CUSTOM_TIPS_CHANGED = 'custom-tips-changed';
+const notifyCustomTipsChanged = (exerciseId) => {
+  window.dispatchEvent(new CustomEvent(CUSTOM_TIPS_CHANGED, { detail: { exerciseId } }));
+};
+
+const ExerciseDetail = ({ exercise, onBack, onDelete, removedTips = [], onDeleteTip, onUndoable }) => {
   const [imageError, setImageError] = useState(false);
   const [customTips, setCustomTips] = useState('');
   const [savedCustomTips, setSavedCustomTips] = useState([]);
@@ -11,34 +41,44 @@ const ExerciseDetail = ({ exercise, onBack, onDelete }) => {
     setImageError(true);
   };
   
-  const defaultImage = 'https://via.placeholder.com/300x200/3b82f6/ffffff?text=Image';
-  
   useEffect(() => {
-    const saved = localStorage.getItem(`customTips_${exercise.id}`);
-    if (saved) {
-      try {
-        const parsedTips = JSON.parse(saved);
-        setSavedCustomTips(Array.isArray(parsedTips) ? parsedTips : []);
-      } catch (e) {
-        const oldFormat = saved.split('\n\n').filter(tip => tip.trim());
-        setSavedCustomTips(oldFormat);
+    // A different exercise may have a working image even if the previous one failed.
+    setImageError(false);
+  }, [exercise.id]);
+
+  useEffect(() => {
+    setSavedCustomTips(readCustomTips(exercise.id));
+
+    const handleChanged = (event) => {
+      if (event.detail && event.detail.exerciseId === exercise.id) {
+        setSavedCustomTips(readCustomTips(exercise.id));
       }
-    }
+    };
+    window.addEventListener(CUSTOM_TIPS_CHANGED, handleChanged);
+    return () => window.removeEventListener(CUSTOM_TIPS_CHANGED, handleChanged);
   }, [exercise.id]);
   
   const handleSaveCustomTip = () => {
     if (customTips.trim()) {
       const newCustomTips = [...savedCustomTips, customTips.trim()];
       setSavedCustomTips(newCustomTips);
-      localStorage.setItem(`customTips_${exercise.id}`, JSON.stringify(newCustomTips));
+      writeCustomTips(exercise.id, newCustomTips);
       setCustomTips('');
     }
   };
   
   const handleClearCustomTips = () => {
     if (window.confirm('Are you sure you want to clear all custom tips?')) {
+      const exerciseId = exercise.id;
+      const previousTips = savedCustomTips;
       setSavedCustomTips([]);
-      localStorage.removeItem(`customTips_${exercise.id}`);
+      writeCustomTips(exerciseId, []);
+      if (onUndoable && previousTips.length) {
+        onUndoable('Custom tips cleared', () => {
+          writeCustomTips(exerciseId, previousTips);
+          notifyCustomTipsChanged(exerciseId);
+        });
+      }
     }
   };
   
@@ -50,7 +90,7 @@ const ExerciseDetail = ({ exercise, onBack, onDelete }) => {
   const handleSaveEdit = () => {
     const newTips = editText.split('\n\n').filter(tip => tip.trim());
     setSavedCustomTips(newTips);
-    localStorage.setItem(`customTips_${exercise.id}`, JSON.stringify(newTips));
+    writeCustomTips(exercise.id, newTips);
     setIsEditing(false);
     setEditText('');
   };
@@ -61,13 +101,31 @@ const ExerciseDetail = ({ exercise, onBack, onDelete }) => {
   };
   
   const handleDeleteTip = (index) => {
+    if (!window.confirm('Remove this tip?')) return;
+    const exerciseId = exercise.id;
+    const removedTip = savedCustomTips[index];
     const newTips = savedCustomTips.filter((_, i) => i !== index);
     setSavedCustomTips(newTips);
-    localStorage.setItem(`customTips_${exercise.id}`, JSON.stringify(newTips));
+    writeCustomTips(exerciseId, newTips);
+    if (onUndoable) {
+      onUndoable('Tip removed', () => {
+        // Re-read storage so edits made after the removal are not lost.
+        const current = readCustomTips(exerciseId);
+        current.splice(Math.min(index, current.length), 0, removedTip);
+        writeCustomTips(exerciseId, current);
+        notifyCustomTipsChanged(exerciseId);
+      });
+    }
   };
   
   const maxLength = 500;
   const remainingChars = maxLength - customTips.length;
+
+  // Built-in tips the user has not removed. Numbering is based on what is visible.
+  const visibleTips = (exercise.tips || []).filter(tip => !removedTips.includes(tip));
+  // Only the built-in exercises' own tips can be removed here (custom exercises
+  // are managed by deleting the whole exercise).
+  const canRemoveTips = Boolean(onDeleteTip) && !exercise.isCustom;
   
   return (
     <div className="max-w-md mx-auto">
@@ -76,7 +134,7 @@ const ExerciseDetail = ({ exercise, onBack, onDelete }) => {
           onClick={onBack}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1"></span>
+          <span className="mr-1">←</span>
           Back to List
         </button>
         <h1 className="text-xl font-bold text-white">
@@ -102,7 +160,7 @@ const ExerciseDetail = ({ exercise, onBack, onDelete }) => {
         <div className="bg-white bg-opacity-10 rounded-lg p-4 border border-white border-opacity-20">
           <div className="flex justify-center items-center bg-gray-900 rounded-lg p-4">
             <img
-              src={imageError ? defaultImage : exercise.image}
+              src={imageError || !exercise.image ? DEFAULT_EXERCISE_IMAGE : exercise.image}
               alt={exercise.name}
               className="max-w-full max-h-64 object-contain"
               onError={handleImageError}
@@ -123,14 +181,28 @@ const ExerciseDetail = ({ exercise, onBack, onDelete }) => {
         </div>
         
         <div className="space-y-3">
-          {exercise.tips.map((tip, index) => (
+          {visibleTips.map((tip, index) => (
             <div
-              key={`original-${index}`}
+              key={`original-${index}-${tip}`}
               className="bg-white bg-opacity-10 rounded-lg p-4 border border-white border-opacity-20"
             >
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Tip {index + 1}
-              </h3>
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="text-lg font-semibold text-white">
+                  Tip {index + 1}
+                </h3>
+                {canRemoveTips && (
+                  <button
+                    onClick={() => {
+                      if (window.confirm('Remove this tip?')) {
+                        onDeleteTip(exercise.id, tip);
+                      }
+                    }}
+                    className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
               <p className="text-gray-300">
                 {tip}
               </p>
@@ -144,7 +216,7 @@ const ExerciseDetail = ({ exercise, onBack, onDelete }) => {
             >
               <div className="flex justify-between items-start mb-2">
                 <h3 className="text-lg font-semibold text-blue-300">
-                  Tip {exercise.tips.length + index + 1}
+                  Tip {visibleTips.length + index + 1}
                 </h3>
                 <button
                   onClick={() => handleDeleteTip(index)}
@@ -162,7 +234,7 @@ const ExerciseDetail = ({ exercise, onBack, onDelete }) => {
         
         <div className="bg-white bg-opacity-10 rounded-lg p-4 border border-white border-opacity-20">
           <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-            <span className="mr-2">??</span>
+            <span className="mr-2">💡</span>
             Custom Tips
           </h3>
           

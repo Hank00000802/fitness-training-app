@@ -32,6 +32,28 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
+      // A new version may already be installed and waiting (e.g. it finished
+      // installing during a previous session but the user never applied it).
+      if (registration.waiting && navigator.serviceWorker.controller) {
+        if (config && config.onUpdate) {
+          config.onUpdate(registration);
+        }
+      }
+
+      // Installed PWAs are rarely fully restarted, so proactively look for a
+      // new version when the app returns to the foreground and once per hour.
+      const checkForUpdate = () => {
+        registration.update().catch(() => {
+          // Offline or server unreachable - try again next time.
+        });
+      };
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          checkForUpdate();
+        }
+      });
+      setInterval(checkForUpdate, 60 * 60 * 1000);
+
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (!installingWorker) {

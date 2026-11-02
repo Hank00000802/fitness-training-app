@@ -28,11 +28,12 @@ registerRoute(
 );
 
 registerRoute(
-  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'),
+  ({ url }) => url.origin === self.location.origin && /\.(png|webp|jpe?g)$/i.test(url.pathname),
   new StaleWhileRevalidate({
     cacheName: 'images',
     plugins: [
-      new ExpirationPlugin({ maxEntries: 50 }),
+      // Room for all built-in exercise images plus icons.
+      new ExpirationPlugin({ maxEntries: 100, purgeOnQuotaError: true }),
     ],
   })
 );

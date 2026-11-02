@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { DEFAULT_EXERCISE_IMAGE } from '../data/exerciseData';
+import { compressImageFile } from '../utils/compressImage';
+
+// Single source of truth for the upload limit (check, error message and hint text).
+const MAX_IMAGE_SIZE_MB = 10;
 
 /**
  * AddExerciseForm component - Add a custom exercise
  *
  * Features:
  * 1. Collect exercise info from user input
- * 2. Support image upload (convert to base64)
+ * 2. Support image upload (auto-resized/compressed, stored as base64)
  * 3. Dynamically add/remove tips
  * 4. Form validation and error handling
  *
@@ -25,33 +30,50 @@ const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
 
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isProcessingImage, setIsProcessingImage] = useState(false);
+  // Identifies the latest image selection so a slow, older one cannot overwrite it.
+  const imageRequestId = useRef(0);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
   };
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files?.[0];
+  const handleImageUpload = async (event) => {
+    const input = event.target;
+    const file = input.files?.[0];
+    // Allow choosing the same file again later (otherwise "change" would not fire).
+    input.value = '';
     if (!file) return;
     if (!file.type.startsWith('image/')) {
       setErrors(prev => ({ ...prev, image: 'Please select an image file' }));
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      setErrors(prev => ({ ...prev, image: 'Image file must be <= 5MB' }));
+    if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+      setErrors(prev => ({ ...prev, image: `Image file must be <= ${MAX_IMAGE_SIZE_MB}MB` }));
       return;
     }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setFormData(prev => ({
-        ...prev,
-        image: e.target?.result,
-        imagePreview: e.target?.result
-      }));
-    };
-    reader.readAsDataURL(file);
+
+    const requestId = ++imageRequestId.current;
     setErrors(prev => ({ ...prev, image: '' }));
+    setIsProcessingImage(true);
+    try {
+      // Resize + compress so the stored image stays small (typically < 100 KB).
+      const { dataUrl } = await compressImageFile(file);
+      if (requestId !== imageRequestId.current) return;
+      setFormData(prev => ({ ...prev, image: dataUrl, imagePreview: dataUrl }));
+    } catch (error) {
+      console.error('Image processing failed:', error);
+      if (requestId !== imageRequestId.current) return;
+      setErrors(prev => ({
+        ...prev,
+        image: 'Could not read this image. Please choose a JPG or PNG file.'
+      }));
+    } finally {
+      if (requestId === imageRequestId.current) {
+        setIsProcessingImage(false);
+      }
+    }
   };
 
   const addTip = () => setFormData(prev => ({ ...prev, tips: [...prev.tips, ''] }));
@@ -85,7 +107,7 @@ const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
       const submitData = {
         name: formData.name.trim(),
         description: formData.description.trim() || 'N/A',
-        image: formData.image || '/images/exercises/default.png',
+        image: formData.image || DEFAULT_EXERCISE_IMAGE,
         tips: formData.tips.filter(tip => tip.trim())
       };
       await onSubmit(submitData);
@@ -105,7 +127,7 @@ const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
           onClick={onCancel}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1"></span>
+          <span className="mr-1">←</span>
           Back to List
         </button>
 
@@ -166,8 +188,13 @@ const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
               Choose Image
             </label>
             <p className="text-sm text-gray-400 mt-2">
-              Supports JPG/PNG, max 5MB
+              Supports JPG/PNG, max {MAX_IMAGE_SIZE_MB}MB. Large images are resized automatically.
             </p>
+            {isProcessingImage && (
+              <p className="text-blue-300 text-sm mt-1" role="status">
+                Processing image...
+              </p>
+            )}
             {errors.image && (
               <p className="text-red-400 text-sm mt-1">{errors.image}</p>
             )}
@@ -216,9 +243,10 @@ const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
                   <button
                     type="button"
                     onClick={() => removeTip(index)}
-                    className="px-2 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                    aria-label={`Remove tip ${index + 1}`}
+                    className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                   >
-                    ?
+                    ✕
                   </button>
                 )}
               </div>
@@ -247,7 +275,7 @@ const AddExerciseForm = ({ bodyPart, onSubmit, onCancel }) => {
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || isProcessingImage}
             className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
           >
             {isLoading ? 'Adding...' : 'Add Exercise'}

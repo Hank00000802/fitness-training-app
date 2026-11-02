@@ -1,6 +1,13 @@
 import React from 'react';
 
-const BodyPartGrid = ({ bodyParts, onBodyPartSelect, onAddBodyPart, onDeleteBodyPart }) => {
+const BodyPartGrid = ({
+  bodyParts,
+  onBodyPartSelect,
+  onAddBodyPart,
+  onDeleteBodyPart,
+  removedDefaultCount = 0,
+  onRestoreDefaults
+}) => {
   return (
     <div className="max-w-md mx-auto">
       <h1 className="text-3xl font-bold text-center mb-8 text-white">Home</h1>
@@ -20,7 +27,7 @@ const BodyPartGrid = ({ bodyParts, onBodyPartSelect, onAddBodyPart, onDeleteBody
                 {bodyPart.name}
               </span>
             </div>
-            {bodyPart.isCustom && onDeleteBodyPart && (
+            {onDeleteBodyPart && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -48,6 +55,20 @@ const BodyPartGrid = ({ bodyParts, onBodyPartSelect, onAddBodyPart, onDeleteBody
         <p className="text-center text-sm text-gray-400 mt-2">
           Add your own training body parts
         </p>
+        {removedDefaultCount > 0 && onRestoreDefaults && (
+          <div className="text-center mt-4">
+            <button
+              onClick={() => {
+                if (window.confirm('Restore all deleted default body parts, exercises and tips?')) {
+                  onRestoreDefaults();
+                }
+              }}
+              className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              Restore deleted default items ({removedDefaultCount})
+            </button>
+          </div>
+        )}
       </div>
       
       <div className="flex justify-center mt-6 space-x-2">

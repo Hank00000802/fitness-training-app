@@ -1,4 +1,5 @@
 import React from 'react';
+import { DEFAULT_EXERCISE_IMAGE } from '../data/exerciseData';
 
 const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExercise, onDelete }) => {
   return (
@@ -8,7 +9,7 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExer
           onClick={onBack}
           className="text-white hover:text-blue-300 transition-colors flex items-center"
         >
-          <span className="mr-1"></span>
+          <span className="mr-1">←</span>
           Back to Home
         </button>
         <h1 className="text-2xl font-bold text-white">
@@ -30,11 +31,18 @@ const ExerciseList = ({ bodyPart, exercises, onExerciseSelect, onBack, onAddExer
               <div className="flex-shrink-0">
                 <div className="w-16 h-16 bg-gray-900 rounded-lg flex items-center justify-center">
                   <img
-                    src={exercise.image}
+                    src={exercise.image || DEFAULT_EXERCISE_IMAGE}
                     alt={exercise.name}
                     className="w-12 h-12 object-contain"
                     onError={(e) => {
-                      e.target.style.display = 'none';
+                      const img = e.currentTarget;
+                      // Fall back to the local default image once; if even that
+                      // fails (e.g. offline before it was cached), hide the broken icon.
+                      if (!img.src.endsWith(DEFAULT_EXERCISE_IMAGE)) {
+                        img.src = DEFAULT_EXERCISE_IMAGE;
+                      } else {
+                        img.style.display = 'none';
+                      }
                     }}
                   />
                 </div>
